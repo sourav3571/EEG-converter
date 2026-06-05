@@ -1,0 +1,584 @@
+/* =================================================================
+   PREMIUM AGENCY DESIGN SYSTEM & OVERRIDES
+   Target: True Black (#0A0A0A) & Acid Green (#C4FF3D)
+   ================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --bg-black: #0A0A0A;
+    --bg-elevated: #141414;
+    --bg-card: #1A1A1A;
+    --bg-hover: #222222;
+
+    --border-faint: #1F1F1F;
+    --border-default: #2A2A2A;
+    --border-bright: #3A3A3A;
+
+    --text-white: #F5F5F5;
+    --text-light: #B8B8B8;
+    --text-muted: #707070;
+    --text-faint: #4A4A4A;
+
+    --accent: #C4FF3D;
+    --positive: #4ADE80;
+    --negative: #F87171;
+
+    --glow-accent: 0 0 45px rgba(196, 255, 61, 0.15);
+    --vignette: radial-gradient(circle, transparent 30%, rgba(0,0,0,0.85) 100%);
+}
+
+/* Hide Default Streamlit Chrome */
+#MainMenu {visibility: hidden;}
+header {visibility: hidden;}
+footer {visibility: hidden;}
+[data-testid="stHeader"] {background: rgba(0,0,0,0) !important; height: 0px !important;}
+[data-testid="stDecoration"] {display: none !important;}
+
+/* Reset Global Canvas */
+html, body, [data-testid="stAppViewContainer"] {
+    background-color: var(--bg-black) !important;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-light) !important;
+    margin: 0;
+    padding: 0;
+}
+
+/* Vignette Atmospheric Layer */
+[data-testid="stAppViewContainer"]::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--vignette);
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Sidebar Styling (Deep Elevation) */
+section[data-testid="stSidebar"] {
+    background-color: var(--bg-elevated) !important;
+    border-right: 1px solid var(--border-default) !important;
+}
+
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] {
+    display: none !important; /* Hide native navigation as we route custom pages */
+}
+
+/* Custom Radio Navigation Styling in Sidebar */
+div[data-testid="stRadio"] div[role="radiogroup"] {
+    gap: 6px !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label {
+    display: flex !important;
+    align-items: center !important;
+    padding: 10px 14px !important;
+    border-radius: 4px !important;
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    color: var(--text-muted) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    margin: 0 !important;
+}
+
+div[data-testid="stRadio"] div[role="radiogroup"] label:hover {
+    color: var(--text-white) !important;
+    background-color: var(--bg-hover) !important;
+}
+
+/* Hide the native radio button circle completely */
+div[data-testid="stRadio"] div[role="radiogroup"] label div[data-testid="stMarker"] {
+    display: none !important;
+}
+div[data-testid="stRadio"] div[role="radiogroup"] label div[class*="st-"] {
+    display: none !important;
+}
+
+/* Target the active page option */
+div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) {
+    color: var(--accent) !important;
+    border-color: var(--border-default) !important;
+    background-color: var(--bg-card) !important;
+}
+
+/* Input Elements Custom Styling */
+div[data-baseweb="select"] > div {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-default) !important;
+    border-radius: 4px !important;
+    color: var(--text-white) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 12px !important;
+}
+
+div[data-baseweb="select"] svg {
+    fill: var(--text-muted) !important;
+}
+
+div[role="listbox"] {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-bright) !important;
+}
+
+div[role="option"] {
+    color: var(--text-light) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 12px !important;
+}
+
+div[role="option"]:hover {
+    background-color: var(--bg-hover) !important;
+    color: var(--accent) !important;
+}
+
+/* Checkbox Custom Styling */
+div[data-testid="stCheckbox"] label {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: var(--text-light) !important;
+}
+
+div[data-testid="stCheckbox"] label div[role="checkbox"] {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-default) !important;
+    border-radius: 3px !important;
+}
+
+div[data-testid="stCheckbox"] label div[role="checkbox"][aria-checked="true"] {
+    background-color: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+
+div[data-testid="stCheckbox"] label div[role="checkbox"] svg {
+    color: var(--bg-black) !important;
+    fill: var(--bg-black) !important;
+}
+
+/* Selectbox Label Custom Styling */
+div[data-testid="stSelectbox"] label {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 9px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    color: var(--text-muted) !important;
+}
+
+/* Slider Controls */
+div[data-testid="stSlider"] [data-testid="stWidgetLabel"] {
+    font-family: 'JetBrains Mono', monospace !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    font-size: 9px !important;
+    color: var(--text-muted) !important;
+}
+
+div[data-testid="stSlider"] div[data-testid="stSliderThumbValue"] {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11px !important;
+    color: var(--accent) !important;
+}
+
+div[data-testid="stSlider"] div[role="slider"] {
+    background-color: var(--accent) !important;
+    border: 2px solid var(--accent) !important;
+    width: 14px !important;
+    height: 14px !important;
+}
+
+div[data-testid="stSlider"] div[role="slider"]::after {
+    display: none !important;
+}
+
+div[data-testid="stSlider"] div[data-testid="stSliderTrack"] > div {
+    background: var(--accent) !important;
+}
+
+div[data-testid="stSlider"] div[data-testid="stSliderTrack"] {
+    background-color: var(--bg-hover) !important;
+}
+
+/* Notifications & Status Badges */
+div[data-testid="stNotification"] {
+    background-color: var(--bg-elevated) !important;
+    border: 1px solid var(--border-default) !important;
+    border-radius: 6px !important;
+    color: var(--text-light) !important;
+}
+
+div[data-testid="stNotification"] svg {
+    color: var(--accent) !important;
+}
+
+.status-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.status-badge.status-demo {
+    background-color: rgba(196, 255, 61, 0.1) !important;
+    color: var(--accent) !important;
+    border: 1px solid rgba(196, 255, 61, 0.3) !important;
+}
+
+.status-badge.status-loaded {
+    background-color: rgba(74, 222, 128, 0.1) !important;
+    color: var(--positive) !important;
+    border: 1px solid rgba(74, 222, 128, 0.3) !important;
+}
+
+/* Custom UI Component Classes */
+
+/* 1. Hero Heading Display */
+.hero-display-sans {
+    font-family: 'Inter', sans-serif;
+    font-size: 88px;
+    font-weight: 600;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--text-white);
+    margin: 0;
+}
+
+.hero-display-italic {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 88px;
+    font-weight: 400;
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+    padding-bottom: 2px;
+}
+
+.hero-display-italic::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--accent);
+}
+
+/* 2. Section Marker Label */
+.section-marker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    display: block;
+}
+
+/* 3. Action Buttons */
+.action-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-bright);
+    color: var(--text-white);
+    padding: 14px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    margin-right: 15px;
+}
+
+.action-btn-primary:hover {
+    border-color: var(--accent);
+    background-color: var(--bg-hover);
+    color: var(--accent);
+}
+
+.action-btn-primary span {
+    margin-left: 8px;
+    color: var(--accent);
+}
+
+.action-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    background-color: transparent;
+    border: 1px solid var(--border-default);
+    color: var(--text-light);
+    padding: 14px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.action-btn-secondary:hover {
+    border-color: var(--text-white);
+    background-color: var(--bg-hover);
+    color: var(--text-white);
+}
+
+/* 4. Bottom Stat Strip */
+.stat-strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-default);
+    border-bottom: 1px solid var(--border-default);
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+.stat-strip-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-strip-item span {
+    color: var(--accent);
+}
+
+/* 5. Data Card */
+.data-card {
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    padding: 32px;
+    margin-bottom: 20px;
+    transition: border-color 0.2s ease;
+}
+
+.data-card:hover {
+    border-color: var(--border-bright);
+}
+
+.data-card h3 {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-white);
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.data-card p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-light);
+    margin: 0;
+}
+
+/* 6. Stat Blocks */
+.stat-block {
+    margin-bottom: 15px;
+}
+
+.stat-block-num {
+    font-family: 'Inter', sans-serif;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1.0;
+    color: var(--text-white);
+    margin-bottom: 6px;
+}
+
+.stat-block-num.highlight {
+    color: var(--accent);
+}
+
+.stat-block-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+}
+
+/* Tabs UI overrides */
+div[data-testid="stTabs"] [role="tablist"] {
+    background-color: transparent !important;
+    border-bottom: 1px solid var(--border-default) !important;
+}
+
+div[data-testid="stTabs"] button[role="tab"] {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    color: var(--text-muted) !important;
+    border: none !important;
+    background-color: transparent !important;
+    padding: 10px 20px !important;
+}
+
+div[data-testid="stTabs"] button[role="tab"][aria-selected="true"] {
+    color: var(--accent) !important;
+    border-bottom: 2px solid var(--accent) !important;
+}
+
+/* Brain electrode glowing art visual */
+.brain-hero-visual {
+    position: relative;
+    width: 100%;
+    height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.brain-hero-visual::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196, 255, 61, 0.15) 0%, transparent 70%);
+    filter: blur(25px);
+    z-index: 1;
+}
+
+.brain-svg {
+    width: 280px;
+    height: 280px;
+    z-index: 2;
+    filter: drop-shadow(0 0 10px rgba(196, 255, 61, 0.2));
+}
+
+.electrode-dot {
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { r: 3px; fill-opacity: 0.4; }
+    50% { r: 5px; fill-opacity: 1; filter: drop-shadow(0 0 5px var(--accent)); }
+    100% { r: 3px; fill-opacity: 0.4; }
+}
+
+/* Custom Prediction Results components */
+.agency-prediction-box {
+    border: 1px solid var(--border-bright);
+    background: var(--bg-elevated);
+    border-radius: 6px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.agency-prediction-box.correct {
+    border-color: var(--accent);
+    box-shadow: var(--glow-accent);
+}
+
+.agency-prediction-box.incorrect {
+    border-color: var(--negative);
+}
+
+/* Streamlit Native Button Overrides */
+div.stButton > button {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-bright) !important;
+    color: var(--text-white) !important;
+    padding: 12px 20px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+    background-image: none !important;
+    width: auto !important;
+}
+
+div.stButton > button:hover {
+    border-color: var(--accent) !important;
+    background-color: var(--bg-hover) !important;
+    color: var(--accent) !important;
+}
+
+div.stButton > button:active {
+    background-color: var(--bg-hover) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent) !important;
+}
+
+/* Markdown Table Custom Styling overrides */
+div[data-testid="stMarkdownContainer"] table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 15px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 13px !important;
+    border: 1px solid var(--border-default) !important;
+}
+
+div[data-testid="stMarkdownContainer"] th {
+    background-color: var(--bg-hover) !important;
+    border-bottom: 2px solid var(--border-default) !important;
+    padding: 10px 12px !important;
+    color: var(--text-white) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    text-align: left !important;
+}
+
+div[data-testid="stMarkdownContainer"] td {
+    padding: 10px 12px !important;
+    border-bottom: 1px solid var(--border-default) !important;
+    color: var(--text-light) !important;
+}
+
+div[data-testid="stMarkdownContainer"] tr:hover {
+    background-color: var(--bg-hover) !important;
+}
+
+div[data-testid="stMarkdownContainer"] td code {
+    background-color: rgba(196, 255, 61, 0.1) !important;
+    color: var(--accent) !important;
+    border: 1px solid rgba(196, 255, 61, 0.2) !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 10px !important;
+}
+
+
+
