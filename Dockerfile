@@ -1,6 +1,6 @@
 # Read the doc: https://huggingface.co/docs/hub/spaces-sdks-docker
-# EEG Imagined Spanish Sentence Decoder
-# Large files (dataset + models) are stored in:
+# EEG Imagined Spanish Sentence Decoder — Full Live Mode
+# Dataset (4.5 GB) + Model weights are downloaded from:
 #   https://huggingface.co/souravbehera3571/eeg-spanish-speech-decoder-data
 
 FROM python:3.12-slim
@@ -27,7 +27,7 @@ WORKDIR /app
 # Copy requirements first (layer cache optimization)
 COPY --chown=user:user requirements.txt /app/requirements.txt
 
-# Install Python packages (CPU-only PyTorch to keep image size manageable)
+# Install Python packages (CPU-only PyTorch)
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir huggingface_hub && \
     pip install --no-cache-dir -r requirements.txt \
@@ -36,19 +36,18 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy all application code
 COPY --chown=user:user . /app
 
-# Download large files from HF Model repo at build time
-# Dataset (4.5 GB) + Model weights (~1 MB each x 61 subjects)
+# Download EVERYTHING from the HF Model repo:
+#   - data/npz/*.npz  → 4.5 GB real EEG dataset (enables Live Data Mode)
+#   - models/*.pth    → 61 trained EEGNet subject weights (enables real predictions)
 RUN python -c " \
 from huggingface_hub import snapshot_download; \
-import os; \
-print('Downloading dataset and model weights from HF Model repo...'); \
+print('Downloading full EEG dataset + model weights from HF...'); \
 snapshot_download( \
     repo_id='souravbehera3571/eeg-spanish-speech-decoder-data', \
     local_dir='/app/Large_Spanish_EEG', \
-    repo_type='model', \
-    ignore_patterns=['*.git*', '*.gitattributes'] \
+    repo_type='model' \
 ); \
-print('Download complete!') \
+print('All files downloaded — Live Data Mode enabled!') \
 "
 
 # Switch to non-root user

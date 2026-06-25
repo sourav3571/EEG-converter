@@ -42,9 +42,14 @@ def local_css(file_name):
             
 local_css("assets/style.css")
 
-# Attempt to load real dataset in background (if file exists)
-npz_path = "../Large_Spanish_EEG/data/npz/language_average_2-50hz_icaLabel95confidence_eyes_60sessions.npz"
-real_data_exists = os.path.exists(npz_path)
+# Attempt to load real dataset — check both local dev path and Docker container path
+NPZ_FILENAME = "language_average_2-50hz_icaLabel95confidence_eyes_60sessions.npz"
+_candidate_paths = [
+    "../Large_Spanish_EEG/data/npz/" + NPZ_FILENAME,        # local development
+    "/app/Large_Spanish_EEG/data/npz/" + NPZ_FILENAME,      # HF Spaces Docker
+]
+npz_path = next((p for p in _candidate_paths if os.path.exists(p)), None)
+real_data_exists = npz_path is not None
 
 if real_data_exists and st.session_state.real_data is None:
     with st.spinner("Loading scientific dataset in background..."):

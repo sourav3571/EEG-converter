@@ -19,15 +19,22 @@ def load_eegnet_model(subject=None):
     Attempts to load the real trained PyTorch model weights from disk.
     Falls back to a simulated/mock setup if not available.
     """
+    # Auto-detect the models base directory (local dev vs Docker container)
+    _model_bases = [
+        "../Large_Spanish_EEG/models",      # local development
+        "/app/Large_Spanish_EEG/models",    # HF Spaces Docker
+    ]
+    _model_base = next((b for b in _model_bases if os.path.isdir(b)), "../Large_Spanish_EEG/models")
+
     model_paths = []
     if subject:
-        model_paths.append(f"../Large_Spanish_EEG/models/eegnet_subj_{subject}_stims2.pth")
+        model_paths.append(f"{_model_base}/eegnet_subj_{subject}_stims2.pth")
     
     model_paths.extend([
-        "../Large_Spanish_EEG/models/eegnet_mixed_stims5.pth",
-        "../Large_Spanish_EEG/models/eegnet_mixed_stims2.pth",
-        "../Large_Spanish_EEG/models/eegnet_scratch_stims5.pth",
-        "../Large_Spanish_EEG/models/eegnet_finetuned_stims5.pth"
+        f"{_model_base}/eegnet_mixed_stims5.pth",
+        f"{_model_base}/eegnet_mixed_stims2.pth",
+        f"{_model_base}/eegnet_scratch_stims5.pth",
+        f"{_model_base}/eegnet_finetuned_stims5.pth"
     ])
     
     for path in model_paths:
