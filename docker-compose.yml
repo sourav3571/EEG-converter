@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  eeg-decoder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: eeg-decoder-app
+    ports:
+      - "8501:8501"
+    volumes:
+      # Mount the large dataset folder from host to container to keep image lightweight
+      - ./Large_Spanish_EEG/data/npz:/app/Large_Spanish_EEG/data/npz
+      # Mount models folder to allow using dynamically added model checkpoints
+      - ./Large_Spanish_EEG/models:/app/Large_Spanish_EEG/models
+    restart: unless-stopped

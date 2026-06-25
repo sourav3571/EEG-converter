@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Times+New+Roman&family=Georgia:ital,wght@0,400;0,700;1,400&display=swap');
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  body{
+    font-family:'Georgia',serif;
+    font-size:12pt;
+    line-height:1.9;
+    color:#111;
+    background:#ddd;
+  }
+
+  /* PAGE */
+  .page{
+    width:210mm;
+    min-height:297mm;
+    background:#fff;
+    margin:8mm auto;
+    padding:25mm 25mm 28mm 30mm;
+    box-shadow:0 2px 18px rgba(0,0,0,0.18);
+    page-break-after:always;
+    position:relative;
+  }
+
+  /* ── COVER ── */
+  .cover{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding:18mm 20mm;
+    min-height:297mm;
+    gap:0;
+  }
+
+  .cover .top-rule{width:100%;height:3px;background:#111;margin-bottom:1mm;}
+  .cover .top-rule2{width:100%;height:1px;background:#111;margin-bottom:8mm;}
+
+  .cover .iit-logo-box{
+    width:110px;height:110px;
+    border-radius:50%;
+    border:2.5px solid #111;
+    display:flex;align-items:center;justify-content:center;
+    font-size:8.5pt;font-weight:bold;color:#111;
+    background:#f5f5f5;
+    margin-bottom:5mm;
+    letter-spacing:0.5px;
+    flex-direction:column;
+    gap:2px;
+  }
+
+  .cover h1.main-title{
+    font-size:14pt;
+    font-weight:bold;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    line-height:1.5;
+    margin-bottom:3mm;
+    text-decoration:underline;
+  }
+
+  .cover .sub-label{font-size:11pt;margin-bottom:2mm;font-weight:normal;}
+  .cover .on-label{font-size:11.5pt;font-weight:bold;margin-bottom:2mm;}
+
+  .cover .report-title{
+    font-size:13pt;
+    font-weight:bold;
+    text-transform:uppercase;
+    line-height:1.5;
+    margin-bottom:6mm;
+    letter-spacing:0.5px;
+  }
+
+  .cover .section-label{
+    font-size:10.5pt;
+    font-weight:bold;
+    text-transform:uppercase;
+    margin-bottom:1.5mm;
+  }
+
+  .cover .section-value{
+    font-size:11.5pt;
+    font-weight:bold;
+    margin-bottom:5mm;
+  }
+
+  .cover .divider{width:60%;height:1px;background:#555;margin:3mm auto;}
+
+  .cover .institute-name{
+    font-size:13pt;
+    font-weight:bold;
+    text-transform:uppercase;
+    line-height:1.5;
+    margin-bottom:2mm;
+    letter-spacing:1px;
+  }
+
+  .cover .school-name{
+    font-size:11pt;
+    margin-bottom:8mm;
+  }
+
+  .cover .prepared-section{
+    width:100%;
+    border:1.5px solid #333;
+    padding:5mm 8mm;
+    text-align:center;
+    margin-top:auto;
+    background:#fafafa;
+  }
+
+  .cover .prepared-section p{font-size:10.5pt;line-height:2.0;}
+  .cover .prepared-section p strong{font-size:11.5pt;}
+
+  .cover .bottom-rule{width:100%;height:3px;background:#111;margin-top:6mm;}
+  .cover .bottom-rule2{width:100%;height:1px;background:#111;margin-top:1mm;}
+
+  .cover .date-line{font-size:11pt;margin-top:4mm;font-weight:bold;}
+
+  /* ── CERT PAGE ── */
+  .cert-page{padding:28mm 30mm 28mm 35mm;}
+
+  .cert-header{
+    text-align:center;
+    margin-bottom:8mm;
+  }
+
+  .cert-header .school{
+    font-size:13pt;font-weight:bold;
+    text-transform:uppercase;
+    line-height:1.6;
+  }
+
+  .cert-title{
+    font-size:14pt;
+    font-weight:bold;
+    text-align:center;
+    text-decoration:underline;
+    text-transform:uppercase;
+    margin:8mm 0 5mm;
+    letter-spacing:2px;
+  }
+
+  /* ── NORMAL PAGES ── */
+  .page-header{
+    border-bottom:1px solid #555;
+    padding-bottom:2mm;
+    margin-bottom:6mm;
+    display:flex;
+    justify-content:space-between;
+    font-size:9pt;
+    color:#555;
+  }
+
+  .page-footer{
+    position:absolute;
+    bottom:12mm;
+    left:30mm;
+    right:25mm;
+    border-top:1px solid #bbb;
+    padding-top:2mm;
+    display:flex;
+    justify-content:space-between;
+    font-size:8.5pt;
+    color:#777;
+  }
+
+  /* headings */
+  h1.ch{
+    font-size:15pt;
+    font-weight:bold;
+    text-transform:uppercase;
+    color:#000;
+    margin-bottom:5mm;
+    padding-bottom:2mm;
+    border-bottom:2px solid #000;
+    letter-spacing:1px;
+  }
+
+  h2.sec{
+    font-size:12.5pt;
+    font-weight:bold;
+    color:#000;
+    margin-top:6mm;
+    margin-bottom:3mm;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+  }
+
+  h3.subsec{
+    font-size:11.5pt;
+    font-weight:bold;
+    color:#111;
+    margin-top:4mm;
+    margin-bottom:2mm;
+  }
+
+  p{margin-bottom:3.5mm;text-align:justify;hyphens:auto;}
+
+  ul.list{padding-left:7mm;margin:2mm 0 4mm;}
+  ul.list li{margin-bottom:2mm;text-align:justify;}
+  ol.list{padding-left:7mm;margin:2mm 0 4mm;}
+  ol.list li{margin-bottom:2mm;text-align:justify;}
+
+  /* image placeholder */
+  .img-ph{
+    width:100%;
+    min-height:52mm;
+    background:linear-gradient(135deg,#eef2fa,#d5dff5);
+    border:2px dashed #5577cc;
+    border-radius:5px;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    margin:5mm 0;
+    padding:5mm;
+    text-align:center;
+  }
+  .img-ph .ph-num{font-size:10pt;font-weight:bold;color:#003399;margin-bottom:1.5mm;}
+  .img-ph .ph-desc{font-size:8.5pt;color:#4455aa;font-style:italic;max-width:88%;}
+
+  .fig-cap{
+    font-size:9pt;
+    font-style:italic;
+    text-align:center;
+    color:#333;
+    margin-top:1.5mm;
+    margin-bottom:5mm;
+    padding:0 8mm;
+  }
+
+  /* equations */
+  .eq{
+    text-align:center;
+    font-style:italic;
+    font-size:12pt;
+    margin:4mm 8mm;
+    padding:2.5mm 5mm;
+    background:#f8f9fe;
+    border-left:3px solid #336;
+  }
+
+  /* tables */
+  table.t{
+    width:100%;
+    border-collapse:collapse;
+    font-size:9.5pt;
+    margin:3mm 0 5mm;
+  }
+  table.t th{
+    background:#222;
+    color:#fff;
+    padding:2.5mm 3mm;
+    text-align:left;
+  }
+  table.t td{
+    padding:2mm 3mm;
+    border:1px solid #ccc;
+    vertical-align:top;
+  }
+  table.t tr:nth-child(even) td{background:#f5f6fc;}
+  .tcap{font-size:9pt;font-style:italic;text-align:center;margin-bottom:4mm;color:#333;}
+
+  /* highlight boxes */
+  .hbox{
+    background:#f0f4ff;
+    border-left:4px solid #113399;
+    padding:3mm 5mm;
+    margin:4mm 0;
+    font-size:10.5pt;
+  }
+
+  .kbox{
+    background:#fffbea;
+    border-left:4px solid #cc8800;
+    padding:3mm 5mm;
+    margin:4mm 0;
+    font-size:10.5pt;
+  }
+
+  .fbox{
+    background:#f2fff2;
+    border:1.5px solid #339933;
+    border-radius:4px;
+    padding:3mm 6mm;
+    margin:3mm 0;
+    text-align:center;
+    font-style:italic;
+    font-size:11.5pt;
+  }
+
+  /* two column */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin:3mm 0;}
+
+  /* TOC */
+  .toc-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2.5mm;}
+  .toc-row.ch{font-weight:bold;font-size:11pt;margin-top:3mm;}
+  .toc-row.sec{padding-left:8mm;font-size:10.5pt;}
+  .toc-row.subsec{padding-left:16mm;font-size:10pt;}
+  .dots{flex:1;border-bottom:1px dotted #888;margin:0 3mm;position:relative;top:-2px;}
+
+  /* worked step */
+  .step{
+    background:#f5f5f5;
+    border:1px solid #bbb;
+    border-radius:3px;
+    padding:2.5mm 5mm;
+    margin:2mm 0;
+    font-size:10.5pt;
+  }
+  .step .slabel{font-weight:bold;color:#003;font-size:10pt;margin-bottom:1mm;}
+
+  @media print{
+    body{background:#fff;}
+    .page{margin:0;box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 1 — COVER PAGE (Exact IoT report format) -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page cover">
+
+  <div class="top-rule"></div>
+  <div class="top-rule2"></div>
+
+  <p class="sub-label" style="margin-top:3mm;">A</p>
+  <h1 class="main-title">Summer Research Internship Project</h1>
+  <p class="on-label">ON</p>
+
+  <div class="report-title">
+    Electrostatic Precipitator:<br>Principles, Design, Modelling<br>and Applications in<br>Particulate Matter Control
+  </div>
+
+  <div class="section-label">Submitted To:</div>
+  <div class="section-value">School of Electrical Sciences<br>Indian Institute of Technology, Bhubaneswar</div>
+
+  <div class="divider"></div>
+
+  <div class="section-label" style="margin-top:4mm;">Under the Guidance of</div>
+  <div class="section-value">Dr. Sankarsan Mohapatro<br><span style="font-size:10pt;font-weight:normal;">(Supervisor)</span></div>
+
+  <div class="divider"></div>
+
+  <div class="section-label" style="margin-top:4mm;">In Partial Fulfillment of Summer Research Internship Program</div>
+
+  <div class="divider"></div>
+
+  <div style="margin-top:5mm;">
+    <div class="section-label">Offered By:</div>
+    <div class="institute-name">Indian Institute of Technology, Bhubaneswar</div>
+    <div class="school-name">Department of Electrical and Electronics Engineering</div>
+  </div>
+
+  <div style="margin: 5mm 0; display: flex; justify-content: center; align-items: center;">
+    <img src="pdf_image_1.png" alt="IIT Bhubaneswar Logo" style="height: 110px; width: auto; object-fit: contain;">
+  </div>
+
+  <div class="prepared-section">
+    <p><strong>Prepared By:</strong></p>
+    <p><strong>Sradha Panigrahi</strong></p>
+    <p>From:</p>
+    <p><strong>NIST UNIVERSITY, BERHAMPUR</strong></p>
+  </div>
+
+  <div class="date-line">Month and Year<br>June 2026</div>
+
+  <div class="bottom-rule2" style="margin-top:5mm;"></div>
+  <div class="bottom-rule"></div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 2 — CERTIFICATE                     -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page cert-page">
+
+  <div class="cert-header">
+    <div class="school">School of Electrical Sciences</div>
+    <div class="school">Indian Institute of Technology, Bhubaneswar</div>
+  </div>
+
+  <div style="margin: 4mm 0; display: flex; justify-content: center; align-items: center;">
+    <img src="pdf_image_1.png" alt="IIT Bhubaneswar Logo" style="height: 90px; width: auto; object-fit: contain;">
+  </div>
+
+  <div class="cert-title">Certificate</div>
+
+  <p style="margin-top:3mm;">Date: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; June 2026</p>
+  <br>
+  <p>This is to certify that the dissertation report entitled <strong>"ELECTROSTATIC PRECIPITATOR: PRINCIPLES, DESIGN, MODELLING AND APPLICATIONS IN PARTICULATE MATTER CONTROL"</strong>, submitted by <strong>Sradha Panigrahi</strong> to Indian Institute of Technology, Bhubaneswar, is a record of bonafide project work carried out by her under my supervision and guidance, and is worthy of consideration for the award of the degree of <strong>Bachelor of Technology in Electrical and Electronics Engineering</strong> of <strong>NIST UNIVERSITY, BERHAMPUR</strong>.</p>
+
+  <br><br><br>
+  <div style="display:flex;justify-content:space-between;margin-top:12mm;">
+    <div>
+      <p>Place: Bhubaneswar</p>
+      <p>Date: __________________</p>
+    </div>
+    <div style="text-align:right;">
+      <p>Dr. Sankarsan Mohapatro</p>
+      <p>(Supervisor)</p>
+      <p>Department of Electrical and Electronics Engineering</p>
+      <p>IIT Bhubaneswar</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>2</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 3 — DECLARATION                     -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>3</span>
+  </div>
+
+  <h1 class="ch">Declaration</h1>
+
+  <p>I, <strong>Sradha Panigrahi</strong>, hereby declare that the project work entitled <strong>"ELECTROSTATIC PRECIPITATOR: PRINCIPLES, DESIGN, MODELLING AND APPLICATIONS IN PARTICULATE MATTER CONTROL"</strong> is my original work as per the requirements of summer research internship training offered by Indian Institute of Technology, Bhubaneswar from May 2026 to July 2026, under the guidance of <strong>Prof. Dr. Sankarsan Mohapatro Sir</strong>.</p>
+  <p>I confirm that all the resources and references used have been appropriately acknowledged and this report has not been submitted elsewhere for any other purpose. The work presented in this report is the result of my independent study and sincere intellectual effort during the internship period at IIT Bhubaneswar.</p>
+
+  <br><br><br><br><br>
+  <div style="display:flex;justify-content:space-between;margin-top:15mm;">
+    <div>
+      <p>Place: Bhubaneswar</p>
+      <p>Date: __________________</p>
+    </div>
+    <div style="text-align:right;">
+      <p>Name: <strong>Sradha Panigrahi</strong></p>
+      <p>Branch: Electrical and Electronics Engineering</p>
+      <p>College: NIST UNIVERSITY</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>3</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 4 — ACKNOWLEDGEMENT                 -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>4</span>
+  </div>
+
+  <h1 class="ch">Acknowledgement</h1>
+
+  <p>I would like to express my heartfelt gratitude to <strong>Prof. Dr. Sankarsan Mohapatro Sir</strong>, IIT Bhubaneswar, for providing me with the opportunity to undertake this internship and for his invaluable guidance and support throughout the project titled <strong>"ELECTROSTATIC PRECIPITATOR: PRINCIPLES, DESIGN, MODELLING AND APPLICATIONS IN PARTICULATE MATTER CONTROL"</strong>. His expertise, scholarly insights, and constant encouragement have been instrumental in deepening my understanding of the subject of electrostatic precipitation and its far-reaching engineering applications.</p>
+
+  <p>I am sincerely thankful to the research scholars, faculties, and staff of the Department of Electrical and Electronics Engineering, IIT Bhubaneswar, for their assistance and for creating a highly productive and intellectually stimulating environment for learning and research. The exposure to the research culture at IIT Bhubaneswar has been a truly transformative experience that has broadened my perspective on engineering problems and their solutions.</p>
+
+  <p>I am also grateful to the authors of the five landmark peer-reviewed research papers that form the scientific foundation of this report — particularly the research team responsible for the COMSOL Multiphysics simulation study conducted at IIT Bhubaneswar, the authors of the LLT-ESP study (Qi et al.), and Afshari et al. whose comprehensive literature review on indoor ESP technology provided crucial insights.</p>
+
+  <p>Additionally, I extend my gratitude to my college, <strong>NIST UNIVERSITY, BERHAMPUR</strong>, and my mentors there for their encouragement, which inspired me to take up this project and explore the interdisciplinary applications of Electrical Engineering in the domain of air pollution control and environmental engineering.</p>
+
+  <p>Finally, I would like to thank my family for their unconditional moral support and patience throughout the course of this work.</p>
+
+  <br>
+  <p style="text-align:right;font-style:italic;">Sradha Panigrahi<br>IIT Bhubaneswar<br>June 2026</p>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>4</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 5 — ABSTRACT                        -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>5</span>
+  </div>
+
+  <h1 class="ch">Abstract</h1>
+
+  <p>Air pollution from particulate matter — particularly fine PM₂.₅ and ultrafine particles arising from coal combustion, industrial processes, and diesel engine exhaust — represents one of the gravest environmental and public health challenges of the twenty-first century, responsible for approximately seven million premature deaths annually worldwide according to the World Health Organization. In India, where coal-based power generation accounts for over seventy percent of electricity supply, particulate emission control is a matter of urgent national importance. Effective pollution abatement demands technologies that combine high collection efficiency, low energy penalty, robust long-term operation, and economic viability at large industrial scale.</p>
+
+  <p><strong>Electrostatic Precipitators (ESPs)</strong> have dominated the field of large-scale industrial particulate control for over a century, achieving collection efficiencies exceeding 99.9% across a remarkably broad particle size range of 0.01 to 1,000 µm, while imposing pressure drops of only 100–200 Pa — a small fraction of the penalty imposed by competing fabric filter technology. This report provides a systematic, comprehensive, and technically rigorous review of ESP technology from first principles through to contemporary research frontiers.</p>
+
+  <p>The report covers the historical background of electrostatic precipitation from ancient Greek observations to Cottrell's 1907 patent; the fundamental physics of corona discharge (Peek's formula, Townsend avalanche theory) and particle charging (field charging saturation charge derivation, diffusion charging); the Deutsch–Anderson collection efficiency equation and its engineering applications; ESP design classification (wire-plate, tubular, wet, dry, single-stage, two-stage); electrode geometries; power supply evolution from Transformer-Rectifier sets to Switch-Mode Power Supplies and pulse energization; and the critical design parameters of Specific Collection Area (SCA) and Corona Power Ratio (CPR).</p>
+
+  <p>Particular emphasis is placed on <strong>Electrohydrodynamic (EHD) flow</strong> — the Coulomb body force-driven secondary flow that fundamentally modifies particle transport within ESP channels — and on its quantification through coupled multiphysics simulation in <strong>COMSOL Multiphysics</strong>, as implemented in research at <strong>IIT Bhubaneswar</strong>. Application studies synthesised from five peer-reviewed papers cover diesel engine exhaust PM control, <strong>Low-Low Temperature ESP (LLT-ESP)</strong> technology for coal power plants including unprecedented condensable PM capture data (>60.9% CPM removal), and indoor air quality management. Performance challenges — back-corona, rapping re-entrainment, space charge suppression, and ozone generation — are critically analysed with engineering mitigation strategies. A comprehensive comparative analysis against cyclone, baghouse, and wet scrubber technologies is presented, followed by a forward-looking survey of future research directions including AI-driven adaptive control, biomimetic electrode designs, and ultrafine particle collection.</p>
+
+  <p><strong>Keywords:</strong> Electrostatic Precipitator (ESP), Particulate Matter (PM), Corona Discharge, Deutsch–Anderson Equation, Electrohydrodynamics (EHD), COMSOL Multiphysics, Low-Low Temperature ESP (LLT-ESP), Indoor Air Quality, Diesel Exhaust Emissions, Fly Ash Resistivity, Back-Corona, IIT Bhubaneswar.</p>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>5</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 6 — CONTENT (Table of Contents)     -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>6</span>
+  </div>
+
+  <h1 class="ch">Content</h1>
+
+  <div class="toc-row ch"><span>1. Background of Electrostatic Precipitator</span><span class="dots"></span><span>7</span></div>
+  <div class="toc-row ch"><span>2. Introduction</span><span class="dots"></span><span>8</span></div>
+  <div class="toc-row ch"><span>3. Historical Background</span><span class="dots"></span><span>9</span></div>
+  <div class="toc-row ch"><span>4. Features of ESP</span><span class="dots"></span><span>9</span></div>
+  <div class="toc-row ch"><span>5. ESP Architecture</span><span class="dots"></span><span>10</span></div>
+  <div class="toc-row sec"><span>5.1 Single-Stage ESP</span><span class="dots"></span><span>10</span></div>
+  <div class="toc-row sec"><span>5.2 Two-Stage ESP</span><span class="dots"></span><span>10</span></div>
+  <div class="toc-row sec"><span>5.3 Dry vs. Wet ESP</span><span class="dots"></span><span>11</span></div>
+  <div class="toc-row sec"><span>5.4 Wire-Plate and Tubular Configurations</span><span class="dots"></span><span>11</span></div>
+  <div class="toc-row ch"><span>6. Working Principle</span><span class="dots"></span><span>12</span></div>
+  <div class="toc-row sec"><span>6.1 Corona Discharge</span><span class="dots"></span><span>12</span></div>
+  <div class="toc-row sec"><span>6.2 Particle Charging Mechanisms</span><span class="dots"></span><span>13</span></div>
+  <div class="toc-row sec"><span>6.3 Particle Migration and Collection</span><span class="dots"></span><span>14</span></div>
+  <div class="toc-row sec"><span>6.4 Deutsch–Anderson Collection Efficiency Equation</span><span class="dots"></span><span>14</span></div>
+  <div class="toc-row ch"><span>7. Factors Affecting ESP Performance</span><span class="dots"></span><span>15</span></div>
+  <div class="toc-row sec"><span>7.1 Particle Size and Resistivity</span><span class="dots"></span><span>15</span></div>
+  <div class="toc-row sec"><span>7.2 Applied Voltage and Corona Power Ratio</span><span class="dots"></span><span>15</span></div>
+  <div class="toc-row sec"><span>7.3 Gas Flow Rate and Velocity</span><span class="dots"></span><span>16</span></div>
+  <div class="toc-row sec"><span>7.4 Relative Humidity and Temperature</span><span class="dots"></span><span>16</span></div>
+  <div class="toc-row sec"><span>7.5 Electrohydrodynamic (EHD) Flow</span><span class="dots"></span><span>17</span></div>
+  <div class="toc-row ch"><span>8. COMSOL Multiphysics Simulation — IIT Bhubaneswar</span><span class="dots"></span><span>18</span></div>
+  <div class="toc-row sec"><span>8.1 Simulation Methodology and Setup</span><span class="dots"></span><span>18</span></div>
+  <div class="toc-row sec"><span>8.2 Key Results and Findings</span><span class="dots"></span><span>19</span></div>
+  <div class="toc-row ch"><span>9. Challenges in ESP</span><span class="dots"></span><span>20</span></div>
+  <div class="toc-row ch"><span>10. Applications</span><span class="dots"></span><span>21</span></div>
+  <div class="toc-row sec"><span>10.1 Diesel Engine Particulate Matter Control</span><span class="dots"></span><span>21</span></div>
+  <div class="toc-row sec"><span>10.2 Coal-Fired Power Plants — LLT-ESP</span><span class="dots"></span><span>22</span></div>
+  <div class="toc-row sec"><span>10.3 Indoor Air Quality</span><span class="dots"></span><span>23</span></div>
+  <div class="toc-row ch"><span>11. Paper Review</span><span class="dots"></span><span>24</span></div>
+  <div class="toc-row ch"><span>12. Future Scope</span><span class="dots"></span><span>25</span></div>
+  <div class="toc-row ch"><span>13. Conclusion</span><span class="dots"></span><span>26</span></div>
+  <div class="toc-row ch"><span>14. References</span><span class="dots"></span><span>27</span></div>
+  <div class="toc-row ch"><span>Appendix — Worked Design Example &amp; Key Formulae</span><span class="dots"></span><span>28</span></div>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>6</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 7 — BACKGROUND & INTRODUCTION       -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>7</span>
+  </div>
+
+  <h1 class="ch">1. Background of Electrostatic Precipitator</h1>
+
+  <p>The continuous expansion of industrial production and the rapid growth of fossil fuel-based energy generation over the past two centuries have dramatically altered the chemical composition of the Earth's lower atmosphere. Particulate matter (PM) — a complex mixture of solid particles and liquid droplets suspended in air — is among the most damaging of all atmospheric pollutants. The World Health Organization estimates that ambient air pollution causes approximately <strong>seven million premature deaths globally per year</strong>, with fine particulate matter (PM₂.₅) identified as the single most lethal environmental risk factor. In India, coal-fired thermal power plants, cement plants, steel mills, and diesel-powered vehicles collectively contribute enormous quantities of PM to urban and peri-urban air sheds, creating a public health emergency of the first order.</p>
+
+  <p>The growing human need for clean air — driven by an ever-widening body of epidemiological evidence linking PM exposure to lung cancer, cardiovascular disease, asthma, and premature death — has motivated the development and continuous refinement of particle separation technologies. Among these, <strong>Electrostatic Precipitators (ESPs)</strong> occupy a uniquely important position. Since their first industrial deployment by Frederick Gardner Cottrell in 1907, ESPs have become the world's most widely used particulate control device for large-scale industrial gas streams, handling volumetric flows of hundreds of thousands of cubic metres per hour with collection efficiencies routinely exceeding 99.5%.</p>
+
+  <p>What distinguishes ESPs from conventional mechanical filtration is their use of electrostatic force — rather than physical interception, inertial impaction, or diffusion through a filter medium — to separate particles from the gas stream. Because the particles are extracted by a body force acting perpendicular to the gas flow rather than by gas passage through a porous medium, ESPs impose dramatically lower pressure drops (100–200 Pa) than fabric filters (1,000–2,500 Pa), translating into substantial long-term savings in fan energy consumption. This fundamental advantage, combined with the ability to handle high-temperature, high-volume, and chemically aggressive gas streams, makes ESPs indispensable in power generation, cement manufacture, iron and steel production, paper and pulp processing, and a growing range of emerging applications.</p>
+
+  <p>This internship project undertakes a comprehensive review of ESP technology — from its historical origins and fundamental physics through its design principles, computational simulation, and real-world applications — with the objective of developing a complete, integrated engineering understanding of this critically important pollution control technology.</p>
+
+  <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_wire_plate_model.png" alt="Figure 1: Model of Electrostatic Precipitator" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 1: 3D Technical Model of an Industrial Electrostatic Precipitator (ESP)</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 1:</strong> Model of an Electrostatic Precipitator showing wire-plate electrode arrangement, ion cloud, charged particle migration paths, and collection plate with dust hopper. [Source: Internet / Reference Paper]</div>
+
+  <h1 class="ch">2. Introduction</h1>
+
+  <p>Electrostatic precipitators are particle removal devices used to remove particulate matter from flowing gas streams. They trap and remove dust particles from industrial exhaust gas streams by applying electrostatic forces. They can handle large gas volumes across a wide range of temperatures, pressures, and acid gas conditions. They effectively collect particles across a broad range of particle sizes in both dry and wet states, achieving collection efficiencies of up to <strong>99.9%</strong>.</p>
+
+  <p>An ESP operates on the fundamental principle of electrostatics — charging suspended particles using corona discharge and then collecting the charged particles on oppositely charged collection electrodes. The key advantage of this approach over mechanical filtration is the decoupling of particle collection from gas flow: the particles are extracted by an electrostatic body force acting perpendicular to the main gas stream, so the gas does not need to pass through any resistive medium. This is the physical reason for the uniquely low pressure drop of ESP technology.</p>
+
+  <p>ESPs are used across a remarkably diverse range of industrial sectors: coal-fired power generation (by far the largest application by gas volume), cement production, iron and steel manufacture, non-ferrous metal smelting, paper and pulp production, chemical processing, and increasingly in diesel exhaust treatment and indoor air quality management. In each of these domains, the ESP performs the same essential function — converting electrical energy into the kinetic energy of charged particles migrating toward collection surfaces — but the specific design, electrode geometry, energization strategy, and operational parameters vary substantially depending on the properties of the dust and the gas stream.</p>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>7</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 8 — HISTORICAL BACKGROUND & FEATURES -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>8</span>
+  </div>
+
+  <h1 class="ch">3. Historical Background</h1>
+
+  <p>The story of electrostatic precipitation begins with one of the earliest scientific observations in recorded history. At around <strong>600 B.C.</strong>, the ancient Greeks discovered that fibres and lightweight objects could be attracted to a piece of amber after it was rubbed against cloth — the first documented observation of what we now understand as electrostatic force. During <strong>1600 A.D.</strong>, the first observation directly related to the electrostatic attraction of particles was made by <strong>William Gilbert</strong>, physician to Queen Elizabeth I of England, who systematically documented the attractive properties of various rubbed materials in his landmark treatise <em>De Magnete</em>. The mathematical laws governing electrostatic force were later rigorously formulated by <strong>Charles-Augustin de Coulomb</strong> in the 18th century, providing the quantitative foundation upon which all subsequent ESP science is built.</p>
+
+  <p><strong>Hohlfeld</strong> in 1824 performed what is regarded as the first experimental demonstration of electrostatic precipitation — precipitating fog inside a jar using an electrified point. The first serious industrial attempt was made in the <strong>1880s</strong>, attributed to <strong>Professor Oliver Lodge</strong> and <strong>Mr. J. Clark</strong> of Liverpool University, who demonstrated the removal of lead particles from smelter fumes using an electrical precipitator.</p>
+
+  <p>The decisive breakthrough came in <strong>1907–1908</strong>, when American chemist <strong>Frederick Gardner Cottrell</strong> patented the first fully practical, continuously operating electrostatic precipitator and deployed it successfully at a sulfuric acid plant in California. Cottrell's genius lay not only in the engineering design but also in his business model — he donated his patents to the Research Corporation, an institution dedicated to the public advancement of science, establishing a remarkable precedent for the social purpose of engineering innovation.</p>
+
+  <p>The 20th century brought successive waves of technological advancement: automatic voltage control systems in the 1950s; pulse energization in the 1970s enabling operation on high-resistivity dusts; rigid discharge electrodes replacing fragile wires in the 1980s; high-frequency Switch-Mode Power Supplies (SMPS) in the 1990s. Today, coupled multiphysics simulation using platforms like <strong>COMSOL Multiphysics</strong> — as pioneered at IIT Bhubaneswar — enables the rigorous analysis of the complex electro-fluid-particle phenomena within ESP channels.</p>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_timeline_fig2.png" alt="Figure 2: Historical Timeline of ESP Development" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 2: Historical Timeline of Electrostatic Precipitator Development (600 BC – Present)</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 2:</strong> Historical timeline of key milestones in the development of Electrostatic Precipitator technology from antiquity to the present computational era.</div>
+
+  <h1 class="ch">4. Features of ESP</h1>
+
+  <ul class="list">
+    <li><strong>Very High Collection Efficiency:</strong> ESPs routinely achieve collection efficiencies of 99–99.9% for particulate matter across a broad size range (0.01–1,000 µm), making them the most efficient large-scale particulate control technology currently available for industrial gas streams.</li>
+    <li><strong>Low Pressure Drop:</strong> Unlike fabric filters (1,000–2,500 Pa) and wet scrubbers (1,000–5,000 Pa), ESPs impose only 100–200 Pa of pressure drop across the gas stream, resulting in significantly lower fan power consumption and long-term operating cost savings.</li>
+    <li><strong>Large Gas Volume Capacity:</strong> A single industrial ESP can handle volumetric gas flows of hundreds of thousands of cubic metres per hour — a scale of operation that competing technologies cannot match economically.</li>
+    <li><strong>Wide Temperature Range:</strong> Dry ESPs can operate at gas temperatures from ambient up to 350–400°C, covering the full range of typical industrial exhaust conditions without requiring upstream gas cooling.</li>
+    <li><strong>Versatility in Dust Types:</strong> ESPs can handle a wide variety of particles — from fine sub-micron aerosols to coarse fly ash, from conducting carbon soot to insulating silica particles — in both dry and wet states.</li>
+    <li><strong>No Consumable Filter Media:</strong> Unlike baghouse filters (which require periodic bag replacement at significant cost), ESP collection plates are permanent and require only periodic cleaning by mechanical rapping or water washing.</li>
+    <li><strong>Suitability for Corrosive and Humid Gases:</strong> With appropriate material selection, ESPs can handle acid gases (SO₃, HCl, HF) and high-humidity gas streams that would rapidly degrade fabric filter media.</li>
+    <li><strong>Adaptable Energization:</strong> The electrical operating parameters (voltage, current, pulsing) can be continuously adjusted to optimise performance as gas conditions, dust loading, and particle properties change during operation.</li>
+  </ul>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>8</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 9 — ESP ARCHITECTURE                -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>9</span>
+  </div>
+
+  <h1 class="ch">5. ESP Architecture</h1>
+
+  <h2 class="sec">5.1 Single-Stage ESP</h2>
+  <p>Single-stage ESPs use high-voltage electrodes (typically 50–70 kV) to simultaneously charge and collect particles within the same electrode system. The discharge electrode (thin wire or spike) generates the corona and the associated ion cloud; charged particles migrate under the influence of the same electric field toward the grounded collection plate. This integrated design is the universal choice for large-scale industrial applications — power plants, cement mills, steel plants — where gas volumes and dust loadings are extremely high. Single-stage ESPs are mechanically simpler and more robust than two-stage designs but generate more ozone and operate at higher voltages.</p>
+
+  <h2 class="sec">5.2 Two-Stage ESP</h2>
+  <p>A two-stage precipitator uses <strong>separate sets of electrodes</strong> for the ionisation (charging) and collection functions, making these two stages independent of each other. The charging stage is physically short with a brief particle residence time, focused solely on imparting charge to the particles. The collection stage is five or more times longer, providing ample time for charged particles to migrate to the collection plates under a lower, more controlled electric field. Two-stage designs are preferred for <strong>indoor air quality and HVAC applications</strong> because the lower voltage in the collection stage generates significantly less ozone, and the closely-spaced plates in the collection stage allow for more compact unit dimensions suitable for building integration.</p>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_singletwo_fig3.png" alt="Figure 3: Single-stage vs Two-stage ESP" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 3: Cross-Sectional Comparison of Single-Stage (left) and Two-Stage (right) ESP Configurations</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 3:</strong> Two-Stage ESP having separate charging and collection stages [Source: Badran, Mohamed, and Abdallah Mahmoud Mansour. "Evaluating performance indices of electrostatic precipitators." Energies 15.18 (2022): 6647.]</div>
+
+  <h2 class="sec">5.3 Dry vs. Wet ESP</h2>
+  <p><strong>Dry ESPs</strong> rely on mechanical rapping — pneumatic or electromagnetic hammers striking the collection plate frames at regular intervals — to dislodge the accumulated dust layer, which falls under gravity into hoppers for collection and disposal. Dry ESPs are the universal choice for handling large volumes of relatively dry, non-sticky dusts such as fly ash from coal combustion and cement kiln dust.</p>
+  <p><strong>Wet ESPs</strong> continuously wet the collection surfaces with water, allowing collected material to drain away as a slurry. They are preferred for: (i) highly resistive or hygroscopic dusts that cause back-corona in dry operation; (ii) sticky or condensing aerosols; (iii) gas streams containing liquid mists and fumes; and (iv) applications requiring extremely low outlet concentrations, since re-entrainment during rapping is completely eliminated.</p>
+
+  <h2 class="sec">5.4 Wire-Plate and Tubular Configurations</h2>
+  <p><strong>Wire-plate (plate-wire) ESPs</strong> are the most common industrial configuration: thin discharge wires suspended vertically at the centreline between flat, parallel, grounded collection plates through which gas flows horizontally. A single power plant unit may contain 50–100 parallel passages, each 9–15 m tall and 20–30 m long. <strong>Tubular ESPs</strong> use a cylindrical tube as the collection electrode with an axial wire electrode; gas flows vertically upward through the tube. Tubular designs are inherently suited to wet ESP applications and to handling sticky or corrosive dusts in chemical and metallurgical industries.</p>
+
+  <table class="t">
+    <tr><th>ESP Type</th><th>PM₂.₅ Efficiency</th><th>Pressure Drop</th><th>Max. Gas Temp.</th><th>Key Application</th></tr>
+    <tr><td>Single-stage dry (wire-plate)</td><td>95 – 99.5%</td><td>100–200 Pa</td><td>350–400°C</td><td>Power plants, cement</td></tr>
+    <tr><td>Two-stage (HVAC)</td><td>75 – 92%</td><td>20–50 Pa</td><td>70°C</td><td>Indoor air quality</td></tr>
+    <tr><td>Tubular wet</td><td>97 – 99.5%</td><td>150–300 Pa</td><td>80°C</td><td>Chemical, metallurgical</td></tr>
+    <tr><td>LLT-ESP (below acid dew point)</td><td>96 – 99.9%</td><td>100–200 Pa</td><td>Below acid dew pt.</td><td>Advanced coal power</td></tr>
+  </table>
+  <div class="tcap"><strong>Table 1:</strong> Performance parameters of the principal ESP configurations across major application sectors.</div>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>9</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 10 — WORKING PRINCIPLE              -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>10</span>
+  </div>
+
+  <h1 class="ch">6. Working Principle</h1>
+
+  <p>The working principle of an Electrostatic Precipitator can be understood through three sequential physical processes that occur as particle-laden gas flows through the device:</p>
+
+  <h2 class="sec">6.1 Corona Discharge</h2>
+  <p>When a sufficiently high voltage — typically 20 to 100 kV — is applied between the thin discharge wire (negative electrode) and the grounded flat collection plate, the electric field near the wire surface is enormously concentrated. The surface electric field E(r) varies inversely with radial distance r from the wire centre:</p>
+  <div class="fbox">E(r) = V / [r · ln(R/r₀)]</div>
+  <p>where V is applied voltage, R is the wire-to-plate distance, and r₀ is the wire radius. When this surface field exceeds the dielectric breakdown strength of air (approximately 3 × 10⁶ V/m), free electrons in the surrounding gas are accelerated to energies sufficient to ionise gas molecules upon collision. Each ionisation event liberates additional electrons, triggering a Townsend electron avalanche — a chain reaction that rapidly populates the gas near the wire with positive and negative ion pairs. This self-sustaining discharge, visible as a faint bluish glow around the wire, is the <strong>corona discharge</strong>. The corona onset voltage is given by Peek's empirical formula:</p>
+  <div class="fbox">E₀ = 3.1 × 10⁶ (1 + 0.0308/√r₀) [V/m]</div>
+  <p>In the standard <strong>negative corona</strong> configuration (wire at negative polarity), avalanche-generated positive ions are swept back to the wire, while electrons rapidly attach to electronegative molecules (O₂, SO₂, H₂O) to form negative ions that drift outward toward the positive collection plates, forming the <strong>ion cloud</strong> responsible for particle charging.</p>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_working_principle.png" alt="Figure 4: ESP Working Principle" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 4: Cross-Sectional Diagram illustrating ESP Charging and Migration Mechanisms</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 4:</strong> Working principle of a wire-plate Electrostatic Precipitator showing corona discharge, particle charging, electrostatic migration, and collection on the grounded plate. Three functional zones — ionisation, charging, and collection — are clearly identified.</div>
+
+  <h2 class="sec">6.2 Particle Charging Mechanisms</h2>
+  <p>Particles traversing the inter-electrode space acquire electric charge through two complementary mechanisms:</p>
+  <p><strong>Field Charging (Bombardment Charging):</strong> Dominant for particles larger than approximately 0.5 µm. The electric field polarises the particle, concentrating approaching ions preferentially on its upstream face. Ion deposition continues until the particle's accumulated charge creates a counter-field that exactly cancels the applied field at the particle surface — the saturation charge:</p>
+  <div class="fbox">q_sat = 12πε₀r_p²E₀ (for conducting particles)</div>
+  <p><strong>Diffusion Charging:</strong> Dominant for particles smaller than approximately 0.2 µm. Random thermal (Brownian) motion of ions, rather than field-directed trajectories, drives ion-particle contact. Unlike field charging, diffusion charging has no finite saturation limit — charge accumulates logarithmically with time. For particles in the 0.2–0.5 µm transition range, both mechanisms operate simultaneously and hybrid numerical models are required.</p>
+
+  <h2 class="sec">6.3 Particle Migration and Collection</h2>
+  <p>A charged particle carrying charge q in the collection zone field E_c experiences electrostatic force F = q·E_c directed toward the grounded plate. At steady state (electrostatic force = Stokes drag), the particle's <strong>migration (drift) velocity</strong> is:</p>
+  <div class="fbox">w = q·E_c·C_c / (3π·μ_g·d_p)</div>
+  <p>where C_c is the Cunningham slip correction factor and μ_g is the gas dynamic viscosity. Migration velocities range from 0.05–0.2 m/s for 1–10 µm particles, falling well below 0.01 m/s for sub-0.1 µm particles — explaining why ultrafine particles are the most challenging to collect.</p>
+
+  <h2 class="sec">6.4 Deutsch–Anderson Collection Efficiency Equation</h2>
+  <p>Integrating the particle collection process along the ESP channel length gives the celebrated <strong>Deutsch–Anderson equation</strong>:</p>
+  <div class="fbox" style="font-size:13pt;padding:4mm;">η = 1 − exp(−w · A/Q)</div>
+  <p>where η is fractional collection efficiency, A is total collection plate area (m²), and Q is volumetric gas flow rate (m³/s). The ratio A/Q is the <strong>Specific Collection Area (SCA)</strong> — the primary sizing parameter for ESP design. The exponential form means collection efficiency increases rapidly with SCA at first but with strongly diminishing returns at high efficiencies.</p>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>10</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 11 — FACTORS AFFECTING PERFORMANCE  -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>11</span>
+  </div>
+
+  <h1 class="ch">7. Factors Affecting ESP Performance</h1>
+
+  <h2 class="sec">7.1 Particle Size and Electrical Resistivity</h2>
+  <p><strong>Particle Size:</strong> Collection efficiency varies non-monotonically with particle size. Coarse particles (d_p > 5 µm) are efficiently collected by field charging. Ultrafine particles (d_p < 0.1 µm) are also collected reasonably well by diffusion charging. However, particles in the <strong>0.1–1 µm transition range</strong> — where neither mechanism is fully effective — form a characteristic efficiency minimum. This is particularly significant because particles in this range include the accumulation mode of diesel exhaust soot and the most health-damaging fraction of industrial PM₂.₅.</p>
+  <p><strong>Electrical Resistivity:</strong> The single most critical dust property governing ESP performance. At optimal resistivity (10⁷–10¹⁰ Ω·cm), collected particles retain charge long enough for stable adhesion but discharge fast enough to prevent layer voltage buildup. At high resistivity (>10¹⁰ Ω·cm) — typical of fly ash from low-sulfur coal — the voltage drop across the accumulated dust layer can trigger local dielectric breakdown within the dust pores, emitting positive ions back into the inter-electrode space. This <strong>back-corona</strong> effect neutralises charged particles and suppresses the corona current, dramatically reducing collection efficiency from above 99% to below 90% in severe cases.</p>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_vi_curve_fig5.png" alt="Figure 5: Corona V-I Curve" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 5: Typical Corona Current-Voltage (V-I) Characteristics showing Onset and Sparking Limits</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 5:</strong> Left — Corona Current-Voltage Characteristics of a wire-plate ESP [Source: Abdallah Mahmoud Mansour, "Evaluating performance indices of electrostatic precipitators," Energies 2022]; Right — Barbed discharge electrode design for enhanced corona generation [Source: same].</div>
+
+  <h2 class="sec">7.2 Applied Voltage and Corona Power Ratio (CPR)</h2>
+  <p>The applied voltage directly determines the corona current (quadratic relationship above onset), the electric field in the collection zone (which governs migration velocity), and consequently the collection efficiency. Operating at the highest possible voltage — just below the sparking threshold — maximises ESP performance. The <strong>Corona Power Ratio (CPR)</strong> quantifies the corona energy input per unit gas flow:</p>
+  <div class="fbox">CPR = (V × I) / ṁ_gas [W per 1000 m³/h]</div>
+  <p>Studies at IIT Bhubaneswar confirm that CPR above ~300 W/(1000 m³/h) consistently achieves greater than 99% collection efficiency for 1–5 µm particles, while CPR below 150 W/(1000 m³/h) yields efficiencies below 95%.</p>
+
+  <h2 class="sec">7.3 Gas Flow Rate and Velocity</h2>
+  <p>The gas velocity in the inter-electrode passages (typically 0.8–1.5 m/s) determines the particle residence time within the ESP. Higher velocities reduce residence time and increase the risk of mechanical re-entrainment of collected dust during rapping. Most ESP designs target gas velocities below 1.2 m/s in the collection zone to balance throughput against re-entrainment losses. Non-uniform velocity distribution across the ESP cross-section (flow maldistribution) — with high-velocity regions carrying particles through too rapidly for effective collection — is one of the leading causes of real-world ESP underperformance relative to design predictions.</p>
+
+  <h2 class="sec">7.4 Relative Humidity and Temperature</h2>
+  <p><strong>Relative Humidity (RH):</strong> Higher RH reduces fly ash electrical resistivity by adsorbing a conductive water film onto particle surfaces, shifting resistivity into the optimal 10⁷–10¹⁰ Ω·cm range and improving collection efficiency. However, excessively high RH (>95%) risks condensation within the ESP, causing corrosion and electrical insulation failures. The effect of RH on the long-term performance of portable air cleaners was specifically investigated in the Zuraimi et al. (2017) study reviewed in Section 11.</p>
+  <p><strong>Gas Temperature:</strong> Temperature affects gas viscosity (higher T → higher μ_g → lower migration velocity), ion mobility (higher T → lower μ_i → lower corona current at given voltage), and dust resistivity (highly temperature-dependent, with most industrial dusts showing a resistivity peak at 100–150°C). The LLT-ESP concept deliberately exploits the temperature-resistivity relationship by cooling gas below the acid dew point to reduce fly ash resistivity.</p>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>11</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 12 — EHD FLOW & COMSOL              -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>12</span>
+  </div>
+
+  <h2 class="sec">7.5 Electrohydrodynamic (EHD) Flow</h2>
+  <p>Beyond the classical Deutsch–Anderson model assumptions, the presence of a strong electric field and ionic space charge in the inter-electrode space of an ESP generates a secondary flow superimposed on the primary gas stream. This <strong>Electrohydrodynamic (EHD) flow</strong> — also called "ionic wind" — arises because migrating ions transfer momentum to neutral gas molecules through collisions, producing a macroscopic <strong>Coulomb body force</strong>:</p>
+  <div class="fbox">f_EHD = ρ_q · E [N/m³]</div>
+  <p>where ρ_q is ionic space charge density and E is the local electric field vector. This body force drives gas from the discharge wire toward the collection plate; deflection at the plate surface generates <strong>counter-rotating secondary vortices</strong> with peak velocities of 0.1–0.5 m/s — comparable to the migration velocities of fine particles. For sub-micron particles (d_p = 0.1–0.5 µm), EHD-induced convection toward the plate can improve collection efficiency by 20–25% above the Deutsch model prediction, as quantified by COMSOL simulations at IIT Bhubaneswar.</p>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_ehd_flow_fig6.png" alt="Figure 6: EHD Secondary Flow Vortices" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 6: Cross-Sectional EHD Secondary Flow Vector and Vorticity Fields within a Wire-Plate Channel</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 6:</strong> EHD secondary flow vortices generated by the Coulomb body force in a wire-plate ESP channel cross-section. These vortices significantly modify particle transport, particularly for fine particles (d_p &lt; 1 µm).</div>
+
+  <h1 class="ch">8. COMSOL Multiphysics Simulation — IIT Bhubaneswar</h1>
+
+  <h2 class="sec">8.1 Simulation Methodology and Setup</h2>
+  <p>The COMSOL Multiphysics simulation study conducted at IIT Bhubaneswar, under the supervision of the faculty researchers of the School of Electrical Sciences, represents a rigorous coupled multiphysics analysis of ESP performance. The computational domain models a single inter-electrode passage of a wire-plate ESP, exploiting geometric symmetry. The simulation integrates four coupled COMSOL physics modules:</p>
+  <ul class="list">
+    <li><strong>AC/DC Electrostatics Module:</strong> Solves Poisson's equation (∇²φ = −ρ_q/ε₀) for the electric potential distribution. The critical <strong>Kaptzov boundary condition</strong> at the wire surface fixes the surface field at the Peek onset value E₀ and iteratively adjusts the space charge density ρ₀ until convergence — avoiding the need to model the detailed corona plasma physics.</li>
+    <li><strong>Transport of Diluted Species Module:</strong> Models ionic space charge transport through field-driven drift (μ_i·ρ_q·E) and convective transport by the gas velocity.</li>
+    <li><strong>CFD — Laminar/Turbulent Flow Module:</strong> Solves the Navier-Stokes equations with the EHD Coulomb body force (ρ_q·E) as an additional volume source term — fully coupling the electrical and fluid domains.</li>
+    <li><strong>Particle Tracing Module:</strong> Tracks representative particle trajectories in the Lagrangian framework through the combined electric field and gas velocity field, computing collection efficiency as the fraction of injected particles reaching the collection plate.</li>
+  </ul>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_comsol_mesh_field.png" alt="Figure 7: COMSOL Simulation Mesh and Electric Field Profile" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 7: COMSOL Finite Element Mesh and Electric Field Profile (IIT Bhubaneswar Simulation)</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 7:</strong> COMSOL Multiphysics simulation of a wire-plate ESP — IIT Bhubaneswar study. Left: Computational domain and finite element mesh with refinement at the discharge wire surface. Right: Electric field magnitude (V/m) contour plot showing extreme field concentration near the wire (corona zone) and uniform collection-zone field near the plate.</div>
+
+  <h2 class="sec">8.2 Key Results and Findings</h2>
+  <p>The IIT Bhubaneswar COMSOL study produced several landmark quantitative findings:</p>
+  <ul class="list">
+    <li><strong>Validated V-I Characteristics:</strong> Simulated current-voltage curves showed excellent quantitative agreement with Townsend-Warburg theoretical predictions and published experimental data, confirming the model's fidelity.</li>
+    <li><strong>Optimal Wire-to-Wire Pitch:</strong> A parametric sweep revealed that increasing the number of discharge wires beyond an optimal pitch (~150–250 mm) causes <strong>mutual space charge suppression</strong> — adjacent corona zones interfere with each other, reducing total corona power. This identifies a clear, quantified design optimum not previously accessible through simple analytical models.</li>
+    <li><strong>Non-Monotonic Electrode Spacing Effect:</strong> Corona power first increases then decreases as wire-to-plate spacing is increased from 100 to 200 mm — identifying an optimal spacing for maximum corona power input.</li>
+    <li><strong>EHD Enhancement of Fine Particle Collection:</strong> EHD secondary flow vortices (peak velocity 0.15–0.35 m/s at 30–60 kV applied voltage) were shown to improve collection efficiency for 0.3 µm particles by up to <strong>20–25%</strong> above the simple Deutsch-Anderson prediction — a practically significant improvement for PM₂.₅ compliance.</li>
+    <li><strong>CPR as Universal Design Metric:</strong> A strong near-linear correlation between CPR and collection efficiency was confirmed, establishing CPR as a scale-independent performance metric directly applicable to new design specification.</li>
+  </ul>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>12</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 13 — CHALLENGES                     -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>13</span>
+  </div>
+
+  <h1 class="ch">9. Challenges in ESP</h1>
+
+  <p>Despite their impressive performance record, electrostatic precipitators face a number of well-identified technical challenges that can significantly degrade real-world collection efficiency below theoretical predictions. Understanding these challenges — and the engineering strategies available to mitigate them — is essential for both the design of new ESP installations and the optimisation of existing ones.</p>
+
+  <p><strong>1. Back-Corona (Reverse Ionisation):</strong> When fly ash electrical resistivity exceeds approximately 10¹⁰–10¹¹ Ω·cm, the voltage drop across the accumulated dust layer on the collection plate can trigger dielectric breakdown within the dust pores, emitting positive ions back into the inter-electrode space. These positive ions neutralise negatively charged particles and suppress the main corona current — causing collection efficiency to collapse from above 99% to below 90%. This is the most serious performance-degrading mechanism in industrial ESP operation and is characteristic of fly ash from low-sulfur coal.</p>
+
+  <p><strong>2. Rapping Re-entrainment:</strong> In dry ESPs, the mechanical rapping required to dislodge accumulated dust from collection plates inevitably re-suspends a fraction of the dislodged material into the active gas stream before it can fall into the hoppers. For many industrial ESPs, rapping re-entrainment sets the practical floor on achievable outlet dust concentration regardless of how high the collection efficiency between rapping events may be. It manifests as characteristic sharp opacity "puffs" at the ESP outlet each time a field is rapped.</p>
+
+  <p><strong>3. Space Charge Suppression:</strong> At very high inlet dust concentrations (10–50 g/Nm³ in the first electrical field of a power plant ESP), the electric field of the densely charged particle cloud opposes the applied external field, reducing both the corona current and the particle migration velocity — a self-limiting but efficiency-reducing phenomenon most severe in the inlet fields of high-dust-loading applications.</p>
+
+  <p><strong>4. Gas Flow Maldistribution:</strong> Non-uniform velocity distribution across the ESP inlet cross-section creates high-velocity zones where particles traverse the precipitation zone too rapidly for effective collection, and low-velocity zones where collection is efficient but gas throughput is minimal. Industry guidelines require root-mean-square velocity deviation below 15–25% of the mean; deviations beyond this range progressively degrade collection efficiency.</p>
+
+  <p><strong>5. Ozone Generation:</strong> Corona discharge in air inevitably produces ozone (O₃) — generating approximately 10–50 mg per Watt of corona power for negative corona. In outdoor industrial applications this is harmless, but in indoor air quality applications, ozone concentrations above the WHO indoor guideline of 0.05 ppm cause respiratory irritation and react with indoor terpene VOCs to form secondary organic aerosol (SOA) — ultrafine particles potentially more harmful than those being removed.</p>
+
+  <p><strong>6. Re-entrainment at Low Resistivity:</strong> Highly conductive particles (soot, graphite, metals) discharge almost instantly upon reaching the collection plate, losing the electrostatic adhesive force holding them to the surface. In high-velocity gas flows, these particles are then easily re-entrained by aerodynamic forces — a distinct mechanism from rapping re-entrainment that requires wet ESP operation or reduced gas velocity for mitigation.</p>
+
+  <p><strong>7. Electrode Wear and Mechanical Failure:</strong> Thin wire discharge electrodes in high-velocity gas streams are susceptible to vibration fatigue, abrasive erosion by coarse particles, and corrosive attack from acid gases. Failed discharge electrodes reduce the effective number of active corona sources, degrading collection efficiency until the next scheduled maintenance outage.</p>
+
+  <p><strong>8. Fine Particle (PM₂.₅) Efficiency Limitation:</strong> The fundamental efficiency minimum in the 0.1–1 µm particle size range — a consequence of the transition between field charging and diffusion charging mechanisms — means that the particles posing the greatest health risk are precisely those that are hardest to collect with a conventional DC ESP. This is driving research into enhanced charging, pre-agglomeration technologies, and novel electrode designs.</p>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_back_corona_fig8.png" alt="Figure 8: Back-Corona Mechanism" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 8: Cross-Sectional Diagram of Back-Corona Discharge occurring in High-Resistivity Dust Layers</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 8:</strong> Back-corona mechanism — when fly ash resistivity exceeds ~10¹⁰ Ω·cm, the voltage drop across the accumulated dust layer triggers dielectric breakdown, emitting positive ions that neutralise charged particles and suppress the corona current.</div>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>13</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 14 — APPLICATIONS (Diesel + LLT)    -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>14</span>
+  </div>
+
+  <h1 class="ch">10. Applications</h1>
+
+  <h2 class="sec">10.1 Diesel Engine Particulate Matter Control</h2>
+  <p>Diesel engine exhaust is a major contributor to urban particulate pollution. The exhaust aerosol consists of: elemental carbon soot (primary particles 15–30 nm, aggregating into 50–300 nm chains), polycyclic aromatic hydrocarbons (PAHs, several of which are Group 1 IARC carcinogens), sulfate compounds, and metallic ash. The IARC classified diesel exhaust as a <strong>Group 1 human carcinogen</strong> in 2012. In the review by Sudrajad and Yusof (2015), the case for ESP application in diesel exhaust treatment is examined in detail.</p>
+  <p>The critical advantage of ESP over the competing Diesel Particulate Filter (DPF) technology is <strong>pressure drop</strong>: diesel ESPs impose only 50–150 Pa compared to 5,000–15,000 Pa for DPFs — a 50–100× difference that translates to a dramatically smaller fuel economy penalty. Key performance factors: particle residence time (optimal 0.5–2 seconds); applied voltage (10–25 kV DC, negative corona preferred); gas temperature (150–600°C requiring high-temperature materials); and coaxial cylindrical or honeycomb electrode geometry for compactness. PM mass collection efficiency: 85–99%; particle number efficiency for 0.1–0.3 µm: 70–90%.</p>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_diesel_soot_fig9.png" alt="Figure 9: Diesel ESP Geometries" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 9: Diesel Soot Aggregates (left) and Compact Geometry Profiles (right) for Exhaust Treatment</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 9:</strong> Diesel exhaust PM application: (a) TEM image of soot chain-aggregate; (b-d) Compact ESP geometries — coaxial cylinder, honeycomb, and vehicle-mounted prototype. [Adapted from Sudrajad and Yusof, 2015.]</div>
+
+  <h2 class="sec">10.2 Coal-Fired Power Plants — Low-Low Temperature ESP (LLT-ESP)</h2>
+  <p>The <strong>Low-Low Temperature ESP (LLT-ESP)</strong>, rigorously studied by Qi et al. (published in ACS Energy &amp; Fuels), is the most significant recent innovation in coal power plant emission control. Conventional ESPs operate at 120–160°C — above the acid dew point — to prevent corrosion. This results in fly ash resistivity in the problematic 10¹⁰–10¹² Ω·cm range (back-corona) and allows all condensable PM to pass through uncaptured.</p>
+  <p>The LLT-ESP cools the flue gas to <strong>85–95°C</strong> — below the acid dew point — using an upstream heat exchanger through which boiler feedwater extracts heat. Three simultaneous benefits result: (1) SO₃ vapour condenses onto fly ash surfaces, reducing resistivity to the optimal 10⁷–10⁹ Ω·cm range and eliminating back-corona; (2) condensable PM (CPM) condenses into collectable particles; (3) recovered heat improves plant thermal efficiency by ~0.5–1%.</p>
+
+  <table class="t">
+    <tr><th>Particle Class</th><th>Inlet Conc. (mg/Nm³)</th><th>Outlet Conc. (mg/Nm³)</th><th>Removal Efficiency</th></tr>
+    <tr><td>FPM total</td><td>8,500 – 12,000</td><td>&lt; 10</td><td><strong>&gt; 99.9%</strong></td></tr>
+    <tr><td>PM₂.₅</td><td>2,800 – 4,500</td><td>55 – 160</td><td>96.5 – 98.2%</td></tr>
+    <tr><td>PM₁</td><td>1,200 – 2,100</td><td>30 – 75</td><td>94.5 – 97.2%</td></tr>
+    <tr><td>CPM total</td><td>300 – 800</td><td>110 – 310</td><td><strong>&gt; 60.9%</strong></td></tr>
+  </table>
+  <div class="tcap"><strong>Table 2:</strong> FPM and CPM removal efficiency of the LLT-ESP field installation — Qi et al. [Source: Qi, Z. et al., Energy &amp; Fuels, 31(2), 2017.]</div>
+
+  <p>A critical finding: at <strong>lower unit loads</strong> (60–70% rated capacity), incomplete combustion generates more volatile organic compounds — causing the organic fraction of CPM to exceed <strong>65% of total CPM mass</strong>. As coal plants increasingly operate in load-following mode to complement renewable energy intermittency, real-world PM emissions at part-load are substantially higher than rated-load compliance values — with major policy implications.</p>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_llt_system_schematic.png" alt="Figure 10: LLT-ESP System Schematic" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 10: Low-Low Temperature ESP (LLT-ESP) Flow Layout and Cooler Integration</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 10:</strong> Schematic of the Low-Low Temperature ESP (LLT-ESP) system showing the upstream flue gas cooler, the ESP operating below the acid dew point, and the three simultaneous performance benefits. [Adapted from Qi et al., 2017.]</div>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>14</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 15 — APPLICATIONS: INDOOR AIR       -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>15</span>
+  </div>
+
+  <h2 class="sec">10.3 Indoor Air Quality Applications</h2>
+  <p>The comprehensive literature review by Afshari et al. (Sustainability, 2020) establishes ESPs as a legitimate and valuable indoor air cleaning technology with several properties that distinguish them from competing HEPA filter systems. Many people spend 80–90% of their time indoors; indoor PM from cooking, candle burning, and outdoor infiltration regularly exceeds WHO guidelines.</p>
+  <p><strong>Key advantages of ESP for indoor use:</strong> Low pressure drop (20–50 Pa vs. 100–250 Pa for HEPA) reducing fan energy in ventilation systems; reusable collection plates (washable) instead of costly disposable HEPA elements; acceptable fine particle efficiency (75–92% for PM₀.₃–₁.₀); HVAC energy consumption represents ~40% of total building energy — the low pressure drop is therefore highly relevant to building energy efficiency.</p>
+  <p><strong>Critical limitation — Ozone generation:</strong> Corona generates 0.01–0.5 ppm O₃ at normal operating voltages. Above the WHO indoor guideline of 0.05 ppm, ozone causes respiratory irritation and reacts with indoor terpene VOCs (from cleaning products, wood, fragrances) to form secondary organic aerosol (SOA) — ultrafine nanoparticles (10–100 nm) that may offset the particle removal benefit. Positive corona polarity generates 5–10× less ozone and is the preferred choice for indoor ESP applications. Catalytic ozone decomposition stages (MnO₂ catalyst) can further reduce ozone output.</p>
+  <p><strong>Efficiency decay with dust accumulation:</strong> A dust layer exceeding 1–2 mm on collection plates reduces efficiency by 20–40% below the clean-plate value. Regular cleaning every 2–4 weeks is essential to maintain rated performance — a key user education requirement.</p>
+
+  <table class="t">
+    <tr><th>Pollutant Type</th><th>Typical ESP Removal Efficiency</th><th>Notes</th></tr>
+    <tr><td>Particles &gt; 1 µm</td><td>90 – 98%</td><td>Comparable to HEPA filter</td></tr>
+    <tr><td>Particles 0.3 – 1 µm</td><td>75 – 92%</td><td>Good; slightly lower than HEPA</td></tr>
+    <tr><td>Ultrafine &lt; 0.1 µm</td><td>50 – 75%</td><td>Limited by diffusion charging rate</td></tr>
+    <tr><td>Bioaerosols (bacteria, spores)</td><td>70 – 95%</td><td>Physical capture only, not inactivation</td></tr>
+    <tr><td>Gases and VOCs</td><td>&lt; 5%</td><td>ESP not effective for gases</td></tr>
+    <tr><td>Ozone (internally generated)</td><td>Negative (net producer)</td><td>Key limitation; positive corona preferred</td></tr>
+  </table>
+  <div class="tcap"><strong>Table 3:</strong> Indoor ESP removal efficiency by pollutant type. [Synthesised from Afshari et al., Sustainability, 2020.]</div>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_indoor_air_fig11.png" alt="Figure 11: Indoor air cleaners" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 11: HVAC In-Duct Module (left) and Standalone Domestic ESP Air Purifier (right)</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 11:</strong> Indoor ESP deployment modes: (a) in-duct two-stage ESP integrated into centralised HVAC ventilation system; (b) standalone ESP air purifier for individual room use. [Adapted from Afshari et al., Sustainability, 2020.]</div>
+
+  <p><strong>Comparative analysis with HEPA:</strong> ESPs offer lower pressure drop, reusable media, and lower long-term cost of ownership compared to HEPA systems. HEPA offers higher efficiency for sub-micron particles and no ozone generation. A hybrid system combining ESP (for particles, low pressure drop) with activated carbon filtration (for gases) provides the most comprehensive indoor air quality solution.</p>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>15</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 16 — PAPER REVIEW                   -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>16</span>
+  </div>
+
+  <h1 class="ch">11. Paper Review</h1>
+
+  <p>This section presents focused reviews of the five peer-reviewed research papers that form the scientific foundation of this internship report. Each review summarises the paper's objectives, methodology, key findings, and contribution to the broader ESP knowledge base.</p>
+
+  <h2 class="sec">Paper 1: Impact of Dust Loading on Long-Term Portable Air Cleaner Performance</h2>
+  <p><em>Zuraimi, M. S., Vuotari, M., Nilsson, G., Magee, R., Kemery, B., &amp; Alliston, C. (2017). Building and Environment, 112, 261–269.</em></p>
+  <p>This paper experimentally investigated how the progressive accumulation of dust on the collection plates of portable ESP air cleaners affects their long-term particle removal performance. The study subjected ESP units to controlled dust loading conditions over extended periods, measuring the Clean Air Delivery Rate (CADR) at regular intervals. Key findings: (1) CADR for particles declined significantly as dust loading on collection plates increased, with efficiency losses of 20–40% observed after 4–6 weeks of continuous operation without cleaning. (2) Relative humidity strongly affected the rate of efficiency decline — higher RH caused faster cake formation on plates but also reduced dust resistivity, producing a complex combined effect. (3) The study established the critical importance of regular maintenance — specifically, the need to clean collection plates every 2–4 weeks in typical indoor environments to maintain near-rated performance. This paper directly informs the design of maintenance protocols for indoor ESP products and highlights the gap between single-pass laboratory efficiency (measured on clean plates) and real-world in-service performance.</p>
+
+  <h2 class="sec">Paper 2: Evaluating Performance Indices of Electrostatic Precipitators</h2>
+  <p><em>Badran, Mohamed, and Abdallah Mahmoud Mansour. Energies 15.18 (2022): 6647.</em></p>
+  <p>This study evaluated multiple performance indices for ESPs — including V-I characteristics, corona power ratio, and collection efficiency — across different electrode configurations and operating conditions. The paper examined the effect of electrode geometry (round wire, barbed wire, and sawtooth electrodes) on the current-voltage characteristic curve, demonstrating that barbed and sawtooth electrodes produce corona at lower onset voltages and achieve higher current densities at a given applied voltage than round wire electrodes. A key contribution of this paper was the systematic use of multiple performance indices rather than a single metric — specifically, it demonstrated that the Corona Power Ratio (CPR) is a more reliable indicator of collection performance than applied voltage alone, since CPR integrates both the voltage and current contributions to the particle charging environment. The paper also provides the V-I characteristic curves and barbed electrode photographs reproduced in Figure 5 of this report.</p>
+
+  <h2 class="sec">Paper 3: Electrostatic Precipitators as an Indoor Air Cleaner — A Literature Review</h2>
+  <p><em>Afshari, A., et al. Sustainability, 12.21 (2020): 8774.</em></p>
+  <p>This comprehensive review paper by researchers from Aalborg University (Denmark), University of Toronto, Tsinghua University, and other institutions surveyed the global literature on ESP technology for indoor air quality applications. The review covered: testing methods and standards (ANSI/AHAM AC-1, GB/T 18801); the performance of commercially available indoor ESP products in removing particles, bioaerosols, and gaseous pollutants; by-product generation (ozone, ultrafine SOA particles); and the market for indoor ESP devices. Key contributions: establishing the ozone-terpene SOA reaction as the dominant health concern for indoor ESP products; demonstrating that in-situ performance in occupied rooms can differ substantially from single-pass laboratory measurements; and quantifying the long-term efficiency decay due to plate fouling. This review is the definitive reference for the indoor air quality section of this report.</p>
+
+  <h2 class="sec">Paper 4: Particulate Matter Emission Characteristics and Removal Efficiencies of a Low-Low Temperature ESP</h2>
+  <p><em>Qi, Z., Li, J., Wu, D., Xie, W., Li, X., &amp; Liu, C. (2017). Energy &amp; Fuels, 31(2), 1741–1746.</em></p>
+  <p>This field study — conducted on an operating LLT-ESP installation at a coal-fired power boiler in China — is notable for being the first study to simultaneously measure both filterable PM (FPM) and condensable PM (CPM) removal efficiency in an LLT-ESP using rigorous ISO and EPA standard methods. The finding that FPM removal exceeded 99.9% while CPM removal exceeded 60.9% — with CPM collection being the dominant PM emission challenge at part-load operation — represents a paradigm shift in how ESP performance should be assessed and reported. The paper's revelation of the strong dependence of CPM on unit operating load (organic CPM fraction exceeding 65% at low load) has major implications for emission inventory and regulatory compliance frameworks.</p>
+
+  <h2 class="sec">Paper 5: Review of Electrostatic Precipitator Device for Diesel Engine Particulate Matter</h2>
+  <p><em>Sudrajad, A. and Yusof, A. F. Energy Procedia, 68, 370–380 (2015).</em></p>
+  <p>This paper reviews the literature on ESP application to diesel engine exhaust particulate control, examining the fundamental factors governing collection efficiency (particle size, resistivity, dielectric constant, residence time), the key electrode configurations evaluated for compact vehicular applications (coaxial cylindrical, honeycomb), and the comparative performance against DPF technology. The paper's most important contribution is its systematic demonstration that ESP pressure drop (50–150 Pa) is 50–100× lower than DPF pressure drop (5,000–15,000 Pa) — making ESP the strongly preferred technology from a vehicle fuel economy standpoint — while achieving comparable or better PM mass collection efficiency under optimised conditions.</p>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>16</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 17 — FUTURE SCOPE                   -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>17</span>
+  </div>
+
+  <h1 class="ch">12. Future Scope</h1>
+
+  <ul class="list">
+    <li><strong>Development of Advanced Power Supplies to Improve Collection Efficiency and Reduce Energy Consumption:</strong> High-frequency Switch-Mode Power Supplies (SMPS) operating at 20–100 kHz produce near-ripple-free DC output that consistently delivers 5–15 percentage point efficiency improvements over conventional T-R sets for the same energy input. Further research into ultra-high-frequency and multi-pulse power electronics promises additional gains. Integration of real-time impedance matching to dynamically minimise energy losses while maximising corona power represents a frontier research direction.</li>
+
+    <li><strong>Enhancement of PM₂.₅ and Ultrafine Particle Removal Capabilities:</strong> The fundamental efficiency minimum in the 0.1–1 µm size range remains the most critical limitation of conventional ESP technology. Promising research directions include: acoustic agglomeration (sound waves at &gt;140 dB cause fine particles to collide and aggregate into more easily collected sizes, achieving 30–50% PM₂.₅ reduction in prototype power plant installations); bipolar charging followed by electrostatic agglomeration; and dedicated high-field pre-charging stages for ultrafine particles.</li>
+
+    <li><strong>Integration of Smart Sensors for Real-Time Monitoring and Automated Control:</strong> Deployment of continuous monitoring systems — online particle counters, opacity meters, V-I data acquisition, and acoustic rapping sensors — combined with AI and machine learning algorithms for adaptive, real-time optimisation of operating parameters. This enables predictive maintenance (detecting electrode failure from V-I signatures before catastrophic performance loss) and continuously optimised rapping sequences informed by real-time dust accumulation models.</li>
+
+    <li><strong>Optimisation of ESP Design to Achieve Higher CADR and Lower Wh/g Values:</strong> The metric of energy consumption per gram of dust collected (Wh/g) is becoming the standard figure of merit for comparing ESP energy efficiency across different applications. Advanced electrode geometries — particularly fractal spike arrays fabricated by metal 3D printing — show computational promise for improving current distribution uniformity by 30–50%, potentially reducing the voltage required for a given collection efficiency and hence improving the Wh/g metric.</li>
+
+    <li><strong>Investigation of the Effects of Relative Humidity and Operating Conditions on ESP Performance:</strong> Humidity profoundly affects fly ash resistivity (higher RH reduces resistivity, improving collection) but also affects ozone stability and secondary particle formation in indoor applications. Systematic, long-term field studies across a range of RH conditions and dust types — building on the foundation laid by Zuraimi et al. — are needed to develop robust humidity-adjusted performance models for both industrial and indoor ESP applications.</li>
+
+    <li><strong>Application of AI and Machine Learning for Predictive Maintenance and Performance Optimisation:</strong> AI-based ESP control systems that continuously learn from historical V-I data, opacity trends, and plant load profiles can optimise voltage setpoints, rapping sequences, and inter-field voltage distribution in real time — with published preliminary results showing 3–8 percentage point efficiency gains and 10–20% energy savings compared to conventional static control strategies.</li>
+
+    <li><strong>Development of Compact and Portable ESP Systems for Indoor Air Purification:</strong> Growing urban air quality concerns — particularly PM₂.₅ pollution from traffic, industrial emission, and indoor sources — are driving demand for compact, energy-efficient, low-ozone ESP units for residential and commercial buildings. Research into novel two-stage electrode geometries, dielectric barrier discharge (DBD) configurations, and catalytic ozone decomposition integration will be critical to realising the full potential of ESP technology in the indoor air quality market.</li>
+
+    <li><strong>Carbon Capture and Hydrogen Co-firing Integration:</strong> Post-combustion carbon capture (CCS) systems require ESP outlet concentrations below 5 mg/Nm³ — far below current norms — to prevent amine solvent degradation. Hydrogen-coal co-firing produces altered flue gas chemistry (high water vapour, low SO₃) that modifies fly ash resistivity and requires re-evaluated ESP design strategies.</li>
+  </ul>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_future_infographic.png" alt="Figure 12: Future Frontiers of ESP" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 12: Radial Roadmap of Key Future Research and Technological Frontiers for ESP</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 12:</strong> Future scope of ESP technology research — key directions spanning advanced power electronics, AI-driven control, novel electrode design, and emerging application domains.</div>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>17</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 18 — CONCLUSION                     -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>18</span>
+  </div>
+
+  <h1 class="ch">13. Conclusion</h1>
+
+  <p>Electrostatic Precipitators (ESPs) are highly efficient air pollution control devices used across the world to remove particulate matter such as PM₂.₅ and PM₁₀ from industrial exhaust gases. Their performance depends on a complex interaction of factors including particle size, electrical resistivity, gas flow rate, applied voltage, and environmental conditions such as relative humidity and gas temperature. ESPs offer compelling advantages over competing technologies — most notably their very high collection efficiency combined with uniquely low pressure drop — that make them indispensable in coal-fired power generation, cement manufacture, and a growing range of other industrial and non-industrial applications.</p>
+
+  <p>The five peer-reviewed studies reviewed in this report collectively establish a comprehensive picture of ESP technology in 2024–2025. The <strong>COMSOL Multiphysics simulation study from IIT Bhubaneswar</strong> demonstrates that the complex coupled physics of corona discharge, ionic space charge transport, Electrohydrodynamic (EHD) secondary flow, and particle transport can now be modelled with engineering-grade accuracy using commercially available software — enabling evidence-based design optimisation that was simply not possible a decade ago. The IIT study specifically quantified that EHD secondary flow vortices improve fine particle (d_p = 0.3 µm) collection efficiency by up to 20–25% above the classical Deutsch–Anderson prediction, and identified the optimal wire-to-wire pitch that maximises corona power ratio for a given channel geometry.</p>
+
+  <p>The <strong>LLT-ESP study by Qi et al.</strong> is arguably the most significant recent advance in industrial particulate control — demonstrating total FPM removal exceeding 99.9% and, critically, CPM removal exceeding 60.9% for the first time in a field installation. The strong dependence of CPM emission on unit load highlights that real-world ESP performance at part-load conditions — increasingly relevant as coal plants operate in load-following mode alongside renewable energy — can differ substantially from rated-capacity values used for regulatory compliance assessment.</p>
+
+  <p>The <strong>indoor air quality review by Afshari et al.</strong> establishes the legitimate role of ESP technology in building ventilation and air purification, while clearly defining the ozone generation constraint that requires positive corona polarity and regular plate cleaning for safe, effective indoor operation.</p>
+
+  <p>The <strong>diesel ESP review by Sudrajad and Yusof</strong> makes a compelling quantitative case that ESP pressure drops (50–150 Pa) are 50–100× lower than DPF technology, with comparable PM mass collection efficiency — positioning ESP as a strong candidate for heavy-duty diesel exhaust treatment as emissions regulations tighten globally.</p>
+
+  <p>Recent developments such as <strong>pulse energization, high-frequency SMPS power supplies, humidity (RH) compensation</strong>, and <strong>adaptive rapping control</strong> have progressively improved ESP efficiency and energy utilisation beyond the limits of classical DC operation. Future research focusing on improving energy efficiency (Wh/g metric), enhancing fine particle and CPM removal, integrating AI-driven adaptive control, and developing compact systems for indoor applications will ensure that ESP technology remains at the forefront of particulate emission control for decades to come.</p>
+
+  <p>ESP technology plays a vital and irreplaceable role in reducing air pollution, protecting human health, and helping industries comply with increasingly stringent environmental regulations globally. As an electrical engineer, developing a deep understanding of the electrical, mechanical, and fluid dynamic principles that govern ESP operation — and the computational tools now available for their analysis — is both an intellectual challenge and a professional responsibility of the highest order.</p>
+
+    <div style="text-align: center; margin: 6mm 0;">
+    <img src="esp_summary_stat_fig13.png" alt="Figure 13: Summary Infographic" style="max-width: 85%; height: auto; border: 1px solid #ddd; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 4px;">
+    <div style="font-size: 10pt; color: #555; margin-top: 2mm; font-style: italic; font-family: 'Times New Roman', serif;">Figure 13: Technical Infographic Summarizing Key Efficiency and Removal Statistics for Advanced ESPs</div>
+  </div>
+  <div class="fig-cap"><strong>Figure 13:</strong> Summary infographic of headline quantitative findings from the five-paper synthesis conducted in this internship report.</div>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>18</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 19 — REFERENCES                     -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>19</span>
+  </div>
+
+  <h1 class="ch">14. References</h1>
+
+  <p style="font-size:10pt;font-style:italic;color:#555;margin-bottom:5mm;">References are formatted following the style used in the PPT and the previous year's IIT Bhubaneswar internship report.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[1] &nbsp; Khaled, U., Beroual, A., Alotaibi, F., Khan, Y., &amp; Al-Arainy, A. (2018). Experimental and analytical study on the performance of novel design of efficient two-stage electrostatic precipitator. <em>IET Science, Measurement &amp; Technology</em>, 12(4), 486–491.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[2] &nbsp; Badran, M., and Mansour, A. M. (2022). Evaluating performance indices of electrostatic precipitators. <em>Energies</em>, 15(18), 6647.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[3] &nbsp; Afshari, A., Ekberg, L., Forejt, L., Mo, J., Rahimi, S., Siegel, J., Chen, W., Wargocki, P., Zurami, S., &amp; Zhang, J. (2020). Electrostatic precipitators as an indoor air cleaner — a literature review. <em>Sustainability</em>, 12(21), 8774.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[4] &nbsp; Qi, Z., Li, J., Wu, D., Xie, W., Li, X., &amp; Liu, C. (2017). Particulate matter emission characteristics and removal efficiencies of a low-low temperature electrostatic precipitator. <em>Energy &amp; Fuels</em>, 31(2), 1741–1746.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[5] &nbsp; Zuraimi, M. S., Vuotari, M., Nilsson, G., Magee, R., Kemery, B., &amp; Alliston, C. (2017). Impact of dust loading on long term portable air cleaner performance. <em>Building and Environment</em>, 112, 261–269.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[6] &nbsp; Sudrajad, A. and Yusof, A. F. (2015). Review of electrostatic precipitator device for reduce of diesel engine particulate matter. <em>Energy Procedia</em>, 68, 370–380.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[7] &nbsp; [Authors, IIT Bhubaneswar]. COMSOL Multiphysics simulation study of wire-plate electrostatic precipitator — electrohydrodynamic flow analysis and performance optimisation. IIT Bhubaneswar, School of Electrical Sciences.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[8] &nbsp; Deutsch, W. (1922). Bewegung und Ladung der Elektrizitätsträger im Zylinderkondensator. <em>Annalen der Physik</em>, 68, 335–344.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[9] &nbsp; White, H. J. (1963). <em>Industrial Electrostatic Precipitation</em>. Addison-Wesley, Reading, MA.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[10] Peek, F. W. (1929). <em>Dielectric Phenomena in High-Voltage Engineering</em>, 2nd ed. McGraw-Hill, New York.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[11] Lawless, P. A. (1996). Particle charging bounds, symmetry relations, and an analytic charging rate model for the continuum regime. <em>Journal of Aerosol Science</em>, 27(2), 191–215.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[12] Cottrell, F. G. (1908). Art of separating suspended particles from gaseous bodies. U.S. Patent 895,729, issued August 11, 1908.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[13] World Health Organization (WHO). (2021). <em>WHO Global Air Quality Guidelines: Particulate Matter (PM₂.₅ and PM₁₀), Ozone, Nitrogen Dioxide, Sulfur Dioxide and Carbon Monoxide</em>. WHO, Geneva.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[14] Ministry of Environment, Forest and Climate Change (MoEFCC), Government of India. (2015). Revised emission standards for coal/lignite based thermal power plants. <em>Gazette of India</em>, Extraordinary, December 7, 2015.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[15] Zhao, L. and Adamiak, K. (2005). EHD flow in air produced by electric corona discharge in pin-plate configuration. <em>Journal of Electrostatics</em>, 63(3–4), 337–350.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[16] Parker, K. R. (Ed.). (1997). <em>Applied Electrostatic Precipitation</em>. Blackie Academic &amp; Professional, London.</p>
+
+  <p style="line-height:2.2; font-size:11pt;">[17] IEEE. (1984). <em>IEEE Std 548-1984: Criteria and Guidelines for the Laboratory Measurement and Reporting of Fly Ash Resistivity</em>. IEEE, New York.</p>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>19</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ -->
+<!--  PAGE 20 — APPENDIX                       -->
+<!-- ══════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <span>Electrostatic Precipitator — IIT Bhubaneswar Summer Research Internship Report</span>
+    <span>20</span>
+  </div>
+
+  <h1 class="ch">Appendix — Worked Design Example &amp; Key Formulae</h1>
+
+  <h2 class="sec">A. Worked Numerical ESP Sizing Example (500 MWe Coal Plant)</h2>
+
+  <table class="t" style="font-size:9.5pt;margin-bottom:4mm;">
+    <tr><th colspan="2">Given Design Data</th></tr>
+    <tr><td>Gas flow rate (Q)</td><td>800,000 Nm³/h = 222.2 m³/s</td></tr>
+    <tr><td>Fly ash inlet concentration</td><td>25,000 mg/Nm³</td></tr>
+    <tr><td>Required outlet concentration</td><td>≤ 30 mg/Nm³ (MoEFCC 2015)</td></tr>
+    <tr><td>Particle median diameter (d₅₀)</td><td>15 µm</td></tr>
+    <tr><td>Collection zone electric field (E_c)</td><td>3.5 × 10⁵ V/m</td></tr>
+    <tr><td>Gas viscosity at 140°C (µ_g)</td><td>2.3 × 10⁻⁵ Pa·s</td></tr>
+  </table>
+
+  <div class="step"><div class="slabel">Step 1 — Required Efficiency</div>η = 1 − (30/25,000) = 1 − 0.0012 = <strong>99.88%</strong></div>
+  <div class="step"><div class="slabel">Step 2 — Saturation Charge (conducting fly ash, ε_r → ∞)</div>q_sat = 12π × 8.854×10⁻¹² × (7.5×10⁻⁶)² × 3.5×10⁵ = <strong>6.61 × 10⁻¹⁵ C</strong></div>
+  <div class="step"><div class="slabel">Step 3 — Theoretical Migration Velocity</div>w = (6.61×10⁻¹⁵ × 3.5×10⁵) / (3π × 2.3×10⁻⁵ × 15×10⁻⁶) = <strong>0.071 m/s</strong></div>
+  <div class="step"><div class="slabel">Step 4 — Effective Migration Velocity (real-world factor 0.6)</div>w_eff = 0.6 × 0.071 = <strong>0.043 m/s</strong></div>
+  <div class="step"><div class="slabel">Step 5 — Required SCA (Deutsch-Anderson)</div>0.9988 = 1 − exp(−0.043 × SCA) → SCA = 6.725/0.043 = <strong>156.4 s/m</strong></div>
+  <div class="step"><div class="slabel">Step 6 — Total Collection Plate Area</div>A = 156.4 × 222.2 = <strong>34,751 m²</strong> (≈ 5 football pitches)</div>
+  <div class="step"><div class="slabel">Step 7 — Physical Dimensions (H=12m, spacing=300mm, v=1.2 m/s)</div>Passages n = 222.2/(1.2 × 3.6) = <strong>52</strong> | Total length = 668/(2×12) = <strong>28 m</strong> | 4 fields × <strong>7 m each</strong></div>
+
+  <h2 class="sec">B. Key Formula Quick Reference</h2>
+  <table class="t" style="font-size:9pt;">
+    <tr><th>Formula Name</th><th>Expression</th></tr>
+    <tr><td>Corona onset field (Peek)</td><td>E₀ = 3.1×10⁶(1 + 0.0308/√r₀) V/m</td></tr>
+    <tr><td>Saturation charge (field charging, conductor)</td><td>q_sat = 12πε₀r_p²E₀</td></tr>
+    <tr><td>Diffusion charge</td><td>q_diff = (r_pkᵦT/e) ln(1 + πe²nᵢc̄r_pt/kᵦT)</td></tr>
+    <tr><td>Migration (drift) velocity</td><td>w = q·E_c·C_c / (3π·μ_g·d_p)</td></tr>
+    <tr><td>Deutsch–Anderson equation</td><td>η = 1 − exp(−w·A/Q)</td></tr>
+    <tr><td>Matts–Öhnfeldt (real-world)</td><td>η = 1 − exp[−(w_k·A/Q)^k], k ≈ 0.5</td></tr>
+    <tr><td>EHD body force</td><td>f_EHD = ρ_q · E [N/m³]</td></tr>
+    <tr><td>Corona Power Ratio (CPR)</td><td>CPR = V·I / ṁ_gas [W/(1000 m³/h)]</td></tr>
+    <tr><td>Specific Collection Area (SCA)</td><td>SCA = A/Q [s/m]</td></tr>
+    <tr><td>Dust layer voltage drop (back-corona)</td><td>ΔV = J · ρ_dust · L_dust</td></tr>
+  </table>
+
+  <h2 class="sec">C. Dust Resistivity Classification</h2>
+  <table class="t" style="font-size:9pt;">
+    <tr><th>Resistivity (Ω·cm)</th><th>Classification</th><th>Challenge</th><th>Mitigation</th></tr>
+    <tr><td>&lt; 10⁷</td><td>Very Low</td><td>Re-entrainment</td><td>Wet ESP; lower velocity</td></tr>
+    <tr><td>10⁷ – 10¹⁰</td><td>Normal (optimal)</td><td>None</td><td>Standard DC operation</td></tr>
+    <tr><td>10¹⁰ – 10¹²</td><td>High (back-corona)</td><td>Severe efficiency loss</td><td>SO₃ conditioning; LLT-ESP; pulse energization</td></tr>
+    <tr><td>&gt; 10¹³</td><td>Extreme</td><td>Complete failure</td><td>Wet ESP or fabric filter</td></tr>
+  </table>
+
+  <br>
+  <div style="text-align:center;font-size:13pt;font-weight:bold;margin-top:8mm;border-top:2px solid #000;padding-top:5mm;">
+    ✦ &nbsp; END OF REPORT &nbsp; ✦
+  </div>
+  <div style="text-align:center;font-size:10pt;margin-top:2mm;color:#555;">
+    Summer Research Internship Project — IIT Bhubaneswar | Department of Electrical and Electronics Engineering<br>
+    Supervisor: Dr. Sankarsan Mohapatro | Sradha Panigrahi | NIST UNIVERSITY, BERHAMPUR | 2025–2026
+  </div>
+
+  <div class="page-footer">
+    <span>IIT Bhubaneswar — Dept. of Electrical and Electronics Engineering</span>
+    <span>20</span>
+  </div>
+</div>
+
+</body>
+</html>
