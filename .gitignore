@@ -1,0 +1,7 @@
+
+# Ignore nested git backup folders
+**/.git_backup/
+*.git_backup
+
+
+Large_Spanish_EEG/

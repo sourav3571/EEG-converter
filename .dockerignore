@@ -1,0 +1,13 @@
+.git
+.gitignore
+.dockerignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.vscode
+.idea
+venv/
+env/
+Large_Spanish_EEG/ds004279-download/
