@@ -56,9 +56,5 @@ USER user
 # Expose port 7860 for Hugging Face Spaces
 EXPOSE 7860
 
-# Run the Streamlit app on port 7860
-CMD ["streamlit", "run", "eeg_dashboard/app.py", \
-     "--server.port=7860", \
-     "--server.address=0.0.0.0", \
-     "--server.headless=true", \
-     "--server.fileWatcherType=none"]
+# Run the FastAPI app on port 7860
+CMD ["uvicorn", "eeg_dashboard.api_server:app", "--host", "0.0.0.0", "--port", "7860"]

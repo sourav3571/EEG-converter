@@ -70,159 +70,96 @@ def load_eegnet_model(subject=None):
 
 def predict_trial(eeg_data, subject, condition, true_label_idx=None, seed=42):
     """
-    Runs prediction on a single EEG trial. Uses real model if available,
-    otherwise falls back to simulated/realistic predictions.
+    Runs prediction on a single EEG trial using the real trained EEGNet model.
     """
     model_info = load_eegnet_model(subject=subject)
     
-    if model_info.get("is_real", False):
-        try:
-            model = model_info["model_object"]
-            nb_classes = model_info["nb_classes"]
-            
-            # Ensure eeg_data has exactly 750 timepoints along the last axis
-            if eeg_data.shape[1] > 750:
-                eeg_data = eeg_data[:, :750]
-            elif eeg_data.shape[1] < 750:
-                pad_width = 750 - eeg_data.shape[1]
-                eeg_data = np.pad(eeg_data, ((0, 0), (0, pad_width)), mode='constant')
-            
-            # Reshape for PyTorch model: (batch_size=1, channels=1, Chans=14, Samples=750)
-            x = torch.tensor(eeg_data, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
-            with torch.no_grad():
-                outputs = model(x)
-                probabilities = torch.softmax(outputs, dim=1).squeeze().numpy()
-            
-            # If the model has fewer classes than 30, pad probabilities with zeros
-            full_probs = np.zeros(30)
-            if nb_classes < 30:
-                full_probs[:nb_classes] = probabilities
-            else:
-                full_probs = probabilities
-                
-            top_indices = np.argsort(probabilities)[::-1][:min(3, len(probabilities))]
-            top_predictions = []
-            for idx in top_indices:
-                class_num = int(idx) + 1
-                sentence = settings.SENTENCES.get(class_num, f"Sentence {class_num}")
-                top_predictions.append({
-                    "class": class_num,
-                    "sentence": sentence,
-                    "confidence": float(probabilities[idx])
-                })
-                
-            predicted_idx = int(top_indices[0])
-            confidence = float(probabilities[predicted_idx])
-            
-            # Saliency maps (simulated based on channel/time domains)
-            time_saliency = np.zeros(750)
-            time_saliency[125:500] = np.random.uniform(0.6, 1.0, 375)
-            time_saliency += np.random.uniform(0.1, 0.4, 750)
-            time_saliency = np.convolve(time_saliency, np.ones(25)/25, mode='same')
-            time_saliency = (time_saliency - np.min(time_saliency)) / (np.max(time_saliency) - np.min(time_saliency))
-            
-            channel_saliency = {}
-            for ch in settings.CHANNELS:
-                if ch in ['F7', 'F5', 'F3', 'FT7', 'FC5']:
-                    channel_saliency[ch] = float(np.random.uniform(0.75, 0.98))
-                elif ch in ['T7', 'TP7', 'CP5']:
-                    channel_saliency[ch] = float(np.random.uniform(0.65, 0.88))
-                else:
-                    channel_saliency[ch] = float(np.random.uniform(0.20, 0.55))
-                    
-            band_saliency = {
-                "Delta": float(np.random.uniform(0.1, 0.3)),
-                "Theta": float(np.random.uniform(0.7, 0.95)),
-                "Alpha": float(np.random.uniform(0.3, 0.5)),
-                "Beta": float(np.random.uniform(0.6, 0.85)),
-                "Gamma": float(np.random.uniform(0.4, 0.7))
-            }
-            
-            # true_label_idx is 0-indexed, classes are 1-indexed
-            is_correct = (predicted_idx == true_label_idx) if true_label_idx is not None else None
-            
-            return {
-                "predicted_class": predicted_idx + 1,
-                "predicted_sentence": settings.SENTENCES.get(predicted_idx + 1, f"Sentence {predicted_idx + 1}"),
-                "confidence": confidence,
-                "is_correct": is_correct,
-                "top_predictions": top_predictions,
-                "probabilities": full_probs,
-                "explanations": {
-                    "time_saliency": time_saliency,
-                    "channel_saliency": channel_saliency,
-                    "band_saliency": band_saliency
-                }
-            }
-        except Exception as e:
-            st.error(f"Inference error: {e}")
-            # Fall back to simulated prediction
-            
-    # Simulated prediction fallback
-    np.random.seed(seed + (true_label_idx or 0))
-    n_sentences = 30
-    probabilities = np.random.dirichlet(np.ones(n_sentences) * 0.1)
-    
-    if true_label_idx is not None:
-        is_correct = np.random.choice([True, False], p=[0.82, 0.18])
-        if is_correct:
-            max_idx = np.argmax(probabilities)
-            probabilities[max_idx], probabilities[true_label_idx] = probabilities[true_label_idx], probabilities[max_idx]
-            probabilities[true_label_idx] = max(0.65, probabilities[true_label_idx])
-        else:
-            max_idx = np.argmax(probabilities)
-            if max_idx == true_label_idx:
-                wrong_idx = np.random.choice([i for i in range(n_sentences) if i != true_label_idx])
-                probabilities[max_idx], probabilities[wrong_idx] = probabilities[wrong_idx], probabilities[max_idx]
-            second_idx = np.argsort(probabilities)[-2]
-            probabilities[second_idx] = 0.20
-            
-    probabilities = probabilities / np.sum(probabilities)
-    top_indices = np.argsort(probabilities)[::-1][:3]
-    top_predictions = [
-        {"class": idx + 1, "sentence": settings.SENTENCES[idx + 1], "confidence": float(probabilities[idx])}
-        for idx in top_indices
-    ]
-    
-    predicted_idx = top_indices[0]
-    confidence = float(probabilities[predicted_idx])
-    
-    time_saliency = np.zeros(750)
-    time_saliency[125:500] = np.random.uniform(0.6, 1.0, 375)
-    time_saliency += np.random.uniform(0.1, 0.4, 750)
-    time_saliency = np.convolve(time_saliency, np.ones(25)/25, mode='same')
-    time_saliency = (time_saliency - np.min(time_saliency)) / (np.max(time_saliency) - np.min(time_saliency))
-    
-    channel_saliency = {}
-    for ch in settings.CHANNELS:
-        if ch in ['F7', 'F5', 'F3', 'FT7', 'FC5']:
-            channel_saliency[ch] = float(np.random.uniform(0.75, 0.98))
-        elif ch in ['T7', 'TP7', 'CP5']:
-            channel_saliency[ch] = float(np.random.uniform(0.65, 0.88))
-        else:
-            channel_saliency[ch] = float(np.random.uniform(0.20, 0.55))
-            
-    band_saliency = {
-        "Delta": float(np.random.uniform(0.1, 0.3)),
-        "Theta": float(np.random.uniform(0.7, 0.95)),
-        "Alpha": float(np.random.uniform(0.3, 0.5)),
-        "Beta": float(np.random.uniform(0.6, 0.85)),
-        "Gamma": float(np.random.uniform(0.4, 0.7))
-    }
-    
-    return {
-        "predicted_class": predicted_idx + 1,
-        "predicted_sentence": settings.SENTENCES[predicted_idx + 1],
-        "confidence": confidence,
-        "is_correct": (predicted_idx + 1) == true_label_idx if true_label_idx is not None else None,
-        "top_predictions": top_predictions,
-        "probabilities": probabilities,
-        "explanations": {
-            "time_saliency": time_saliency,
-            "channel_saliency": channel_saliency,
-            "band_saliency": band_saliency
+    if not model_info.get("is_real", False):
+        return {
+            "error": "Real EEGNet model weights not found. Please ensure the weights are downloaded from the Hugging Face model repository."
         }
-    }
+        
+    try:
+        model = model_info["model_object"]
+        nb_classes = model_info["nb_classes"]
+        
+        # Ensure eeg_data has exactly 750 timepoints along the last axis
+        if eeg_data.shape[1] > 750:
+            eeg_data = eeg_data[:, :750]
+        elif eeg_data.shape[1] < 750:
+            pad_width = 750 - eeg_data.shape[1]
+            eeg_data = np.pad(eeg_data, ((0, 0), (0, pad_width)), mode='constant')
+        
+        # Reshape for PyTorch model: (batch_size=1, channels=1, Chans=14, Samples=750)
+        x = torch.tensor(eeg_data, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
+        with torch.no_grad():
+            outputs = model(x)
+            probabilities = torch.softmax(outputs, dim=1).squeeze().numpy()
+        
+        # If the model has fewer classes than 30, pad probabilities with zeros
+        full_probs = np.zeros(30)
+        if nb_classes < 30:
+            full_probs[:nb_classes] = probabilities
+        else:
+            full_probs = probabilities
+            
+        top_indices = np.argsort(probabilities)[::-1][:min(3, len(probabilities))]
+        top_predictions = []
+        for idx in top_indices:
+            class_num = int(idx) + 1
+            sentence = settings.SENTENCES.get(class_num, f"Sentence {class_num}")
+            top_predictions.append({
+                "class": class_num,
+                "sentence": sentence,
+                "confidence": float(probabilities[idx])
+            })
+            
+        predicted_idx = int(top_indices[0])
+        confidence = float(probabilities[predicted_idx])
+        
+        # Saliency maps (simulated based on channel/time domains for viz)
+        time_saliency = np.zeros(750)
+        time_saliency[125:500] = np.random.uniform(0.6, 1.0, 375)
+        time_saliency += np.random.uniform(0.1, 0.4, 750)
+        time_saliency = np.convolve(time_saliency, np.ones(25)/25, mode='same')
+        time_saliency = (time_saliency - np.min(time_saliency)) / (np.max(time_saliency) - np.min(time_saliency))
+        
+        channel_saliency = {}
+        for ch in settings.CHANNELS:
+            if ch in ['F7', 'F5', 'F3', 'FT7', 'FC5']:
+                channel_saliency[ch] = float(np.random.uniform(0.75, 0.98))
+            elif ch in ['T7', 'TP7', 'CP5']:
+                channel_saliency[ch] = float(np.random.uniform(0.65, 0.88))
+            else:
+                channel_saliency[ch] = float(np.random.uniform(0.20, 0.55))
+                
+        band_saliency = {
+            "Delta": float(np.random.uniform(0.1, 0.3)),
+            "Theta": float(np.random.uniform(0.7, 0.95)),
+            "Alpha": float(np.random.uniform(0.3, 0.5)),
+            "Beta": float(np.random.uniform(0.6, 0.85)),
+            "Gamma": float(np.random.uniform(0.4, 0.7))
+        }
+        
+        is_correct = (predicted_idx == true_label_idx) if true_label_idx is not None else None
+        
+        return {
+            "predicted_class": predicted_idx + 1,
+            "predicted_sentence": settings.SENTENCES.get(predicted_idx + 1, f"Sentence {predicted_idx + 1}"),
+            "confidence": confidence,
+            "is_correct": is_correct,
+            "top_predictions": top_predictions,
+            "probabilities": full_probs,
+            "explanations": {
+                "time_saliency": time_saliency,
+                "channel_saliency": channel_saliency,
+                "band_saliency": band_saliency
+            }
+        }
+    except Exception as e:
+        return {
+            "error": f"Inference execution failed: {str(e)}"
+        }
 
 @st.cache_data
 def get_training_history(epochs=80):
@@ -328,8 +265,13 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
     # Compute embeddings for standard sentences (tensor representation)
     std_embeddings = model_st.encode(standard_sentences, convert_to_tensor=True)
     
-    # Check if real contrastive model exists
-    contrastive_model_path = "../Large_Spanish_EEG/models/eegnet_contrastive.pth"
+    # Auto-detect the models base directory (local dev vs Docker container)
+    _model_bases = [
+        "../Large_Spanish_EEG/models",      # local development
+        "/app/Large_Spanish_EEG/models",    # HF Spaces Docker
+    ]
+    _model_base = next((b for b in _model_bases if os.path.isdir(b)), "../Large_Spanish_EEG/models")
+    contrastive_model_path = f"{_model_base}/eegnet_contrastive.pth"
     use_real = False
     
     # Output projection of EEG signal (384-dimensional embedding)
@@ -361,19 +303,9 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
             pass
             
     if eeg_emb is None:
-        # High-fidelity simulation: Take true label sentence embedding, add noise
-        np.random.seed(seed + (true_label_idx or 0))
-        if true_label_idx is not None:
-            true_emb = std_embeddings[true_label_idx]
-            # Generate random noise of the same dimension (384)
-            noise = torch.tensor(np.random.normal(0, 0.45, 384), dtype=torch.float32)
-            # Combine to get ~80% cosine similarity average
-            eeg_emb = true_emb + noise
-            eeg_emb = torch.nn.functional.normalize(eeg_emb, dim=-1)
-        else:
-            # Fallback to random embedding
-            eeg_emb = torch.tensor(np.random.normal(0, 1.0, 384), dtype=torch.float32)
-            eeg_emb = torch.nn.functional.normalize(eeg_emb, dim=-1)
+        return {
+            "error": "Real contrastive model weights not found. Please ensure the contrastive model weights are downloaded from the Hugging Face model repository."
+        }
 
     # Compute cosine similarities for the 30 standard sentences
     import torch.nn.functional as F

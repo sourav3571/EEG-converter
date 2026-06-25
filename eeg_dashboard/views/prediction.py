@@ -67,7 +67,6 @@ def render():
     tab_eeg, tab_zero_shot, tab_text = st.tabs(["⚡ EEG Session Inference", "🔬 Zero-Shot Semantic Retrieval", "✍️ Custom Text Input & Dictionary"])
     
     # State extraction
-    is_demo = st.session_state.demo_mode
     subject = st.session_state.selected_subject
     condition = st.session_state.selected_condition
     stimulus_idx = st.session_state.selected_stimulus
@@ -88,56 +87,60 @@ def render():
         """, unsafe_allow_html=True)
         
         # Run Prediction button
-        if st.button("🧠 Run EEGNet Decoder"):
-            progress_bar = st.progress(0)
-            status_text = st.empty()
-            
-            phases = [
-                ("📂 Loading EEG trial epochs from NPZ...", 15),
-                ("🧼 Applying Butterworth 2-50Hz filter...", 35),
-                ("🧿 Removing ocular (ICA) noise channels...", 55),
-                ("⚡ Re-referencing (Common Average Reference)...", 75),
-                ("🔮 Performing EEGNet forward neural pass...", 90),
-                ("📊 Generating saliency maps & confidence distributions...", 100)
-            ]
-            
-            for phase_msg, percentage in phases:
-                status_text.text(phase_msg)
-                progress_bar.progress(percentage)
-                time.sleep(0.15)
+        if st.session_state.real_data is None:
+            st.warning("⚠️ Scientific Dataset is Offline. Please run the download script `python Large_Spanish_EEG/download_dataset.py` or run the application in the official Docker container to load real EEG signals.")
+        else:
+            if st.button("🧠 Run EEGNet Decoder"):
+                progress_bar = st.progress(0)
+                status_text = st.empty()
                 
-            progress_bar.empty()
-            status_text.empty()
-            
-            eeg_raw = None
-            if not is_demo and st.session_state.real_data is not None:
+                phases = [
+                    ("📂 Loading EEG trial epochs from NPZ...", 15),
+                    ("🧼 Applying Butterworth 2-50Hz filter...", 35),
+                    ("🧿 Removing ocular (ICA) noise channels...", 55),
+                    ("⚡ Re-referencing (Common Average Reference)...", 75),
+                    ("🔮 Performing EEGNet forward neural pass...", 90),
+                    ("📊 Generating saliency maps & confidence distributions...", 100)
+                ]
+                
+                for phase_msg, percentage in phases:
+                    status_text.text(phase_msg)
+                    progress_bar.progress(percentage)
+                    time.sleep(0.15)
+                    
+                progress_bar.empty()
+                status_text.empty()
+                
                 eeg_raw = data_loader.get_real_trial_data(
                     st.session_state.real_data, subject, condition, stimulus_idx, trial_idx
                 )
-            if eeg_raw is None:
-                eeg_raw = data_loader.generate_synthetic_eeg(seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}") % 100000, has_artifacts=True)
-                
-            eeg_clean, _ = preprocessor.run_preprocessing_pipeline(
-                eeg_raw, seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}") % 100000
-            )
-            
-            res = model_loader.predict_trial(
-                eeg_clean, subject, condition, true_label_idx=(stimulus_idx - 1), 
-                seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}") % 100000
-            )
-            
-            st.session_state.last_prediction = {
-                "subject": subject,
-                "condition": condition,
-                "trial_idx": trial_idx,
-                "predicted_sentence": res['predicted_sentence'],
-                "confidence": res['confidence'],
-                "is_correct": res['is_correct'],
-                "top_preds": res['top_predictions'],
-                "explanations": res['explanations'],
-                "eeg_clean": eeg_clean,
-                "probabilities": res['probabilities']
-            }
+                if eeg_raw is None:
+                    st.error("❌ Failed to load trial data from the dataset NPZ file.")
+                else:
+                    eeg_clean, _ = preprocessor.run_preprocessing_pipeline(
+                        eeg_raw, seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}") % 100000
+                    )
+                    
+                    res = model_loader.predict_trial(
+                        eeg_clean, subject, condition, true_label_idx=(stimulus_idx - 1), 
+                        seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}") % 100000
+                    )
+                    
+                    if "error" in res:
+                        st.error(f"❌ {res['error']}")
+                    else:
+                        st.session_state.last_prediction = {
+                            "subject": subject,
+                            "condition": condition,
+                            "trial_idx": trial_idx,
+                            "predicted_sentence": res['predicted_sentence'],
+                            "confidence": res['confidence'],
+                            "is_correct": res['is_correct'],
+                            "top_preds": res['top_predictions'],
+                            "explanations": res['explanations'],
+                            "eeg_clean": eeg_clean,
+                            "probabilities": res['probabilities']
+                        }
             
         # Render prediction results if they exist in state
         if 'last_prediction' in st.session_state:
@@ -316,59 +319,60 @@ def render():
         
         custom_candidates = [line.strip() for line in custom_input_area.split('\n') if line.strip()]
         
-        if st.button("🔮 Decode EEG to Semantic Space", key="zero_shot_decode_btn"):
-            progress_bar = st.progress(0)
-            status_text = st.empty()
-            
-            phases = [
-                ("📂 Extracting EEG epochs...", 10),
-                ("🧼 Preprocessing signal & filtering noise...", 30),
-                ("🎛️ Loading contrastive projection network...", 60),
-                ("🌐 Mapping EEG to 384D multilingual sentence embedding space...", 80),
-                ("📊 Calculating cosine similarity with standard & custom candidates...", 100)
-            ]
-            
-            for msg, pct in phases:
-                status_text.text(msg)
-                progress_bar.progress(pct)
-                time.sleep(0.12)
-            progress_bar.empty()
-            status_text.empty()
-            
-            eeg_raw = None
-            if not is_demo and st.session_state.real_data is not None:
+        if st.session_state.real_data is None:
+            st.warning("⚠️ Scientific Dataset is Offline. Please run the download script `python Large_Spanish_EEG/download_dataset.py` or run the application in the official Docker container to load real EEG signals.")
+        else:
+            if st.button("🔮 Decode EEG to Semantic Space", key="zero_shot_decode_btn"):
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+                
+                phases = [
+                    ("📂 Extracting EEG epochs...", 10),
+                    ("🧼 Preprocessing signal & filtering noise...", 30),
+                    ("🎛️ Loading contrastive projection network...", 60),
+                    ("🌐 Mapping EEG to 384D multilingual sentence embedding space...", 80),
+                    ("📊 Calculating cosine similarity with standard & custom candidates...", 100)
+                ]
+                
+                for msg, pct in phases:
+                    status_text.text(msg)
+                    progress_bar.progress(pct)
+                    time.sleep(0.12)
+                progress_bar.empty()
+                status_text.empty()
+                
                 eeg_raw = data_loader.get_real_trial_data(
                     st.session_state.real_data, subject, condition, stimulus_idx, trial_idx
                 )
-            if eeg_raw is None:
-                eeg_raw = data_loader.generate_synthetic_eeg(seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}_zero") % 100000, has_artifacts=True)
-                
-            eeg_clean, _ = preprocessor.run_preprocessing_pipeline(
-                eeg_raw, seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}_zero") % 100000
-            )
-            
-            res_zs = model_loader.predict_contrastive_trial(
-                eeg_clean, subject, condition, 
-                true_label_idx=(stimulus_idx - 1),
-                custom_sentences=custom_candidates,
-                seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}_zero") % 100000
-            )
-            
-            if "error" in res_zs:
-                st.error(f"Error: {res_zs['error']}")
-            else:
-                st.session_state.last_zero_shot = {
-                    "subject": subject,
-                    "condition": condition,
-                    "trial_idx": trial_idx,
-                    "predicted_sentence": res_zs['predicted_sentence'],
-                    "predicted_translation": res_zs['predicted_translation'],
-                    "similarity": res_zs['similarity'],
-                    "top_std_preds": res_zs['top_std_preds'],
-                    "custom_results": res_zs['custom_results'],
-                    "explanations": res_zs['explanations'],
-                    "use_real": res_zs['use_real']
-                }
+                if eeg_raw is None:
+                    st.error("❌ Failed to load trial data from the dataset NPZ file.")
+                else:
+                    eeg_clean, _ = preprocessor.run_preprocessing_pipeline(
+                        eeg_raw, seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}_zero") % 100000
+                    )
+                    
+                    res_zs = model_loader.predict_contrastive_trial(
+                        eeg_clean, subject, condition, 
+                        true_label_idx=(stimulus_idx - 1),
+                        custom_sentences=custom_candidates,
+                        seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}_zero") % 100000
+                    )
+                    
+                    if "error" in res_zs:
+                        st.error(f"Error: {res_zs['error']}")
+                    else:
+                        st.session_state.last_zero_shot = {
+                            "subject": subject,
+                            "condition": condition,
+                            "trial_idx": trial_idx,
+                            "predicted_sentence": res_zs['predicted_sentence'],
+                            "predicted_translation": res_zs['predicted_translation'],
+                            "similarity": res_zs['similarity'],
+                            "top_std_preds": res_zs['top_std_preds'],
+                            "custom_results": res_zs['custom_results'],
+                            "explanations": res_zs['explanations'],
+                            "use_real": res_zs['use_real']
+                        }
                 
         if 'last_zero_shot' in st.session_state:
             zs_data = st.session_state.last_zero_shot

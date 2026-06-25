@@ -133,5 +133,5 @@ def get_demo_subject_metadata(subject, condition, stimulus_idx, trial_idx):
         "Sampling Rate": f"{settings.SAMPLING_RATE} Hz",
         "Trial Duration": f"{settings.TRIAL_DURATION} s",
         "Number of Channels": f"{len(settings.CHANNELS)} (Selected Left-Hemisphere Language channels)",
-        "Data Source": "Synthetic (Demo Mode)" if st.session_state.get('demo_mode', True) else "Live OpenNeuro NPZ Dataset"
+        "Data Source": "Live OpenNeuro NPZ Dataset"
     }

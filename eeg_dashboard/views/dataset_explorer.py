@@ -25,13 +25,12 @@ def render():
     st.markdown("Explore individual trials, channel waveforms, or execute batch preprocessing and decoding with trained models.")
     
     # 1. Load active data
-    is_demo = st.session_state.demo_mode
     subject = st.session_state.selected_subject
     condition = st.session_state.selected_condition
     stimulus_idx = st.session_state.selected_stimulus
     trial_idx = st.session_state.selected_trial
     
-    # Ensure real dataset is loaded in background if not in demo mode
+    # Ensure real dataset is loaded in background
     if st.session_state.real_data is None:
         npz_path = "../Large_Spanish_EEG/data/npz/language_average_2-50hz_icaLabel95confidence_eyes_60sessions.npz"
         if os.path.exists(npz_path):
@@ -41,16 +40,17 @@ def render():
     tab_single, tab_batch = st.tabs(["📊 Individual Trial Explorer", "🖥️ Batch Preprocessing & Decoder"])
     
     with tab_single:
-        eeg_raw = None
-        if not is_demo and st.session_state.real_data is not None:
-            # Load from real NPZ
-            eeg_raw = data_loader.get_real_trial_data(
-                st.session_state.real_data, subject, condition, stimulus_idx, trial_idx
-            )
-            
+        if st.session_state.real_data is None:
+            st.warning("⚠️ Scientific Dataset is Offline. Please run the download script `python Large_Spanish_EEG/download_dataset.py` or run the application in the official Docker container to load real EEG signals.")
+            return
+
+        eeg_raw = data_loader.get_real_trial_data(
+            st.session_state.real_data, subject, condition, stimulus_idx, trial_idx
+        )
+        
         if eeg_raw is None:
-            # Fallback to high-fidelity synthetic EEG data (contains eyeblink artifact at onset)
-            eeg_raw = data_loader.generate_synthetic_eeg(seed=hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}") % 100000, has_artifacts=True)
+            st.error("❌ Failed to load trial data from the dataset NPZ file.")
+            return
             
         metadata = data_loader.get_demo_subject_metadata(subject, condition, stimulus_idx, trial_idx)
         

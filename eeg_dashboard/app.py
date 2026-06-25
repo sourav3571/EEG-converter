@@ -65,10 +65,15 @@ st.sidebar.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 1. Dataset & Demo Status Card
-status_header = "DEMO ACTIVE" if st.session_state.demo_mode else "LIVE DATA ACTIVE"
-status_class = "status-demo" if st.session_state.demo_mode else "status-loaded"
-status_msg = "Running on simulated high-fidelity EEG data." if st.session_state.demo_mode else "Reading trials from ds004279 dataset."
+# 1. Dataset Status Card
+if real_data_exists:
+    status_header = "LIVE DATA ACTIVE"
+    status_class = "status-loaded"
+    status_msg = "Reading trials from ds004279 dataset."
+else:
+    status_header = "DATASET OFFLINE"
+    status_class = "status-demo"  # Reuses orange/red styling
+    status_msg = "Scientific dataset NPZ not found. Please run the download script or run in Docker."
 
 st.sidebar.markdown(f"""
 <div style='background-color: var(--bg-card); border: 1px solid var(--border-default); border-radius: 8px; padding: 14px; margin-bottom: 15px;'>
@@ -80,16 +85,9 @@ st.sidebar.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# 2. Demo Mode Toggle (Only show toggle if real data is available, otherwise lock to Demo)
-if real_data_exists:
-    demo_toggle = st.sidebar.checkbox("Enable Demo Mode", value=st.session_state.demo_mode, 
-                                      help="Toggle between real dataset and synthetic mock data.")
-    if demo_toggle != st.session_state.demo_mode:
-        st.session_state.demo_mode = demo_toggle
-        st.rerun()
-else:
-    st.sidebar.warning("Real dataset NPZ not found in cache. Locked in Demo Mode.")
-    st.session_state.demo_mode = True
+if not real_data_exists:
+    st.sidebar.warning("Real dataset NPZ not found. Scientific analysis and decoding will be disabled until the dataset is downloaded.")
+
 
 st.sidebar.markdown("<hr style='margin: 15px 0; border-color: var(--border-default);'>", unsafe_allow_html=True)
 
