@@ -108,7 +108,7 @@ def get_metadata():
         "sentences": settings.SENTENCES,
         "sentences_english": settings.SENTENCES_ENGLISH,
         "channels": settings.CHANNELS,
-        "brain_regions": settings.BRAIN_REGIONS
+        "brain_regions": settings.CHANNEL_REGIONS
     }
 
 
