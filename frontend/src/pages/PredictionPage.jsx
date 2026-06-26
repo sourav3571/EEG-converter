@@ -96,6 +96,7 @@ export default function PredictionPage({ selectors, metadata, apiOnline }) {
   const [zsResult, setZsResult] = useState(null);
   const [error, setError] = useState(null);
   const [customSentences, setCustomSentences] = useState('');
+  const [averageAllTrials, setAverageAllTrials] = useState(true);
 
   const stdRunner = useDecodeRunner(PHASES_STANDARD);
   const zsRunner = useDecodeRunner(PHASES_ZERO);
@@ -112,6 +113,7 @@ export default function PredictionPage({ selectors, metadata, apiOnline }) {
         condition: selectors.condition,
         stimulus_idx: selectors.stimulusIdx,
         trial_idx: selectors.trialIdx,
+        average_all_trials: averageAllTrials,
       });
       setResult(res);
     } catch (e) {
@@ -130,6 +132,7 @@ export default function PredictionPage({ selectors, metadata, apiOnline }) {
         stimulus_idx: selectors.stimulusIdx,
         trial_idx: selectors.trialIdx,
         custom_sentences: custom,
+        average_all_trials: averageAllTrials,
       });
       setZsResult(res);
     } catch (e) {
@@ -159,11 +162,36 @@ export default function PredictionPage({ selectors, metadata, apiOnline }) {
       <div className="glass-card" style={{ marginBottom: 24 }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 4 }}>Selected Session</div>
         <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent)' }}>
-          Subject {selectors.subject} | Task: {conditionName} | Trial #{Number(selectors.trialIdx) + 1}
+          Subject {selectors.subject} | Task: {conditionName} | {averageAllTrials ? 'Trials: All 6 (Averaged)' : `Trial #${Number(selectors.trialIdx) + 1}`}
         </div>
         <div style={{ fontSize: 13, color: 'var(--text-light)', marginTop: 4 }}>
           Target: <strong style={{ color: 'var(--text-white)' }}>&ldquo;{sentences[selectors.stimulusIdx]}&rdquo;</strong>
         </div>
+      </div>
+
+      {/* Warning for out-of-vocabulary stimuli in binary models */}
+      {selectors.stimulusIdx > 2 && (
+        <div className="alert-card alert-warning" style={{ marginBottom: 24 }}>
+          <span>⚠️</span>
+          <div className="alert-message">
+            <strong>Model Limit Warning</strong> — Subject {selectors.subject}'s model is a binary classifier trained on 2 sentences (Stimulus #1 & #2).
+            Selected Stimulus #{selectors.stimulusIdx} is outside the training set and will be forced into a 2-class prediction.
+          </div>
+        </div>
+      )}
+
+      {/* Trial Averaging Option */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 24, background: 'rgba(255,255,255,0.02)', padding: '12px 16px', borderRadius: 8, border: '1px solid var(--border-default)' }}>
+        <input 
+          type="checkbox" 
+          id="averageAllTrials" 
+          checked={averageAllTrials} 
+          onChange={e => setAverageAllTrials(e.target.checked)}
+          style={{ cursor: 'pointer', width: 16, height: 16, accentColor: 'var(--accent)' }}
+        />
+        <label htmlFor="averageAllTrials" style={{ fontSize: 13, color: 'var(--text-white)', cursor: 'pointer', fontWeight: 500, userSelect: 'none' }}>
+          🧬 Enable Trial Averaging <span style={{ color: 'var(--accent)', marginLeft: 4 }}>(averages all 6 repetitions to cancel background brain noise)</span>
+        </label>
       </div>
 
       {/* Tabs */}

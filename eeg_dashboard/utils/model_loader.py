@@ -161,9 +161,14 @@ def load_eegnet_model(subject=None):
 
     model_paths = []
     if subject:
-        model_paths.append(f"{_model_base}/eegnet_subj_{subject}_stims2.pth")
+        model_paths.extend([
+            f"{_model_base}/eegnet_subj_{subject}_stims30.pth",
+            f"{_model_base}/eegnet_subj_{subject}_stims5.pth",
+            f"{_model_base}/eegnet_subj_{subject}_stims2.pth"
+        ])
     
     model_paths.extend([
+        f"{_model_base}/eegnet_mixed_stims30.pth",
         f"{_model_base}/eegnet_mixed_stims5.pth",
         f"{_model_base}/eegnet_mixed_stims2.pth",
         f"{_model_base}/eegnet_scratch_stims5.pth",
@@ -241,6 +246,9 @@ def predict_trial(eeg_data, subject, condition, true_label_idx=None, seed=42):
         elif eeg_data.shape[1] < 750:
             pad_width = 750 - eeg_data.shape[1]
             eeg_data = np.pad(eeg_data, ((0, 0), (0, pad_width)), mode='constant')
+        
+        # Ensure contiguous strides for torch conversion
+        eeg_data = np.ascontiguousarray(eeg_data)
         
         # Reshape: (batch_size=1, channels=1, Chans=14, Samples=750)
         x = torch.tensor(eeg_data, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
@@ -442,6 +450,9 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
             else:
                 eeg_data_trimmed = eeg_data
                 
+            # Ensure contiguous strides for torch conversion
+            eeg_data_trimmed = np.ascontiguousarray(eeg_data_trimmed)
+            
             x = torch.tensor(eeg_data_trimmed, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
             with torch.no_grad():
                 z = model(x)

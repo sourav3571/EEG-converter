@@ -57,6 +57,9 @@ export default function Sidebar({ activePage, setActivePage, status, selectors, 
               onChange={e => setSelectors(s => ({ ...s, subject: e.target.value }))}>
               {subjects.map(s => <option key={s} value={s}>Subject {s}</option>)}
             </select>
+            <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 5, fontStyle: 'italic' }}>
+              ⭐ Best subjects: <strong style={{ color: 'var(--accent)' }}>S39</strong>, <strong>S17</strong>, <strong>S25</strong>
+            </div>
           </div>
 
           <div className="form-group">

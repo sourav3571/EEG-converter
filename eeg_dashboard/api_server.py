@@ -69,6 +69,7 @@ class DecodeRequest(BaseModel):
     condition: int
     stimulus_idx: int
     trial_idx: int
+    average_all_trials: Optional[bool] = False
 
 class ContrastiveDecodeRequest(BaseModel):
     subject: str
@@ -76,6 +77,7 @@ class ContrastiveDecodeRequest(BaseModel):
     stimulus_idx: int
     trial_idx: int
     custom_sentences: Optional[List[str]] = None
+    average_all_trials: Optional[bool] = False
 
 
 @app.get("/")
@@ -184,18 +186,34 @@ def decode_trial(req: DecodeRequest):
     # Map integer condition → string
     condition_str = map_condition(req.condition)
         
-    eeg_raw = data_loader.get_real_trial_data(
-        real_data, req.subject, condition_str, req.stimulus_idx, req.trial_idx
-    )
-    
-    if eeg_raw is None:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Trial data not found for Subject {req.subject}, Condition {condition_str}, Stimulus {req.stimulus_idx}, Trial {req.trial_idx}"
+    if getattr(req, "average_all_trials", False):
+        num_epochs = data_loader.get_number_of_epochs(real_data, req.subject, condition_str, req.stimulus_idx)
+        trials = []
+        for t_idx in range(num_epochs):
+            t_data = data_loader.get_real_trial_data(
+                real_data, req.subject, condition_str, req.stimulus_idx, t_idx
+            )
+            if t_data is not None:
+                trials.append(t_data)
+        if not trials:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No trials found to average for Subject {req.subject}, Condition {condition_str}, Stimulus {req.stimulus_idx}"
+            )
+        eeg_raw = np.mean(trials, axis=0)
+        seed = hash(f"{req.subject}_{condition_str}_{req.stimulus_idx}_average") % 100000
+    else:
+        eeg_raw = data_loader.get_real_trial_data(
+            real_data, req.subject, condition_str, req.stimulus_idx, req.trial_idx
         )
+        if eeg_raw is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Trial data not found for Subject {req.subject}, Condition {condition_str}, Stimulus {req.stimulus_idx}, Trial {req.trial_idx}"
+            )
+        seed = hash(f"{req.subject}_{condition_str}_{req.stimulus_idx}_{req.trial_idx}") % 100000
         
     # Preprocess
-    seed = hash(f"{req.subject}_{condition_str}_{req.stimulus_idx}_{req.trial_idx}") % 100000
     eeg_clean, _ = preprocessor.run_preprocessing_pipeline(eeg_raw, seed=seed)
     
     # Run prediction
@@ -227,18 +245,34 @@ def decode_contrastive(req: ContrastiveDecodeRequest):
     # Map integer condition → string
     condition_str = map_condition(req.condition)
         
-    eeg_raw = data_loader.get_real_trial_data(
-        real_data, req.subject, condition_str, req.stimulus_idx, req.trial_idx
-    )
-    
-    if eeg_raw is None:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Trial data not found for Subject {req.subject}, Condition {condition_str}, Stimulus {req.stimulus_idx}, Trial {req.trial_idx}"
+    if getattr(req, "average_all_trials", False):
+        num_epochs = data_loader.get_number_of_epochs(real_data, req.subject, condition_str, req.stimulus_idx)
+        trials = []
+        for t_idx in range(num_epochs):
+            t_data = data_loader.get_real_trial_data(
+                real_data, req.subject, condition_str, req.stimulus_idx, t_idx
+            )
+            if t_data is not None:
+                trials.append(t_data)
+        if not trials:
+            raise HTTPException(
+                status_code=404,
+                detail=f"No trials found to average for Subject {req.subject}, Condition {condition_str}, Stimulus {req.stimulus_idx}"
+            )
+        eeg_raw = np.mean(trials, axis=0)
+        seed = hash(f"{req.subject}_{condition_str}_{req.stimulus_idx}_average_zero") % 100000
+    else:
+        eeg_raw = data_loader.get_real_trial_data(
+            real_data, req.subject, condition_str, req.stimulus_idx, req.trial_idx
         )
+        if eeg_raw is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Trial data not found for Subject {req.subject}, Condition {condition_str}, Stimulus {req.stimulus_idx}, Trial {req.trial_idx}"
+            )
+        seed = hash(f"{req.subject}_{condition_str}_{req.stimulus_idx}_{req.trial_idx}_zero") % 100000
         
     # Preprocess
-    seed = hash(f"{req.subject}_{condition_str}_{req.stimulus_idx}_{req.trial_idx}_zero") % 100000
     eeg_clean, _ = preprocessor.run_preprocessing_pipeline(eeg_raw, seed=seed)
     
     # Run contrastive retrieval prediction

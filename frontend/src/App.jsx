@@ -37,7 +37,8 @@ export default function App() {
         setMetadata(m);
         // Set default subject from first available
         if (m.subjects?.length) {
-          setSelectors(s => ({ ...s, subject: m.subjects[0] }));
+          const defaultSubj = m.subjects.includes('S39') ? 'S39' : m.subjects[0];
+          setSelectors(s => ({ ...s, subject: defaultSubj }));
         }
       })
       .catch(() => {});
