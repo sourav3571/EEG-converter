@@ -39,7 +39,7 @@ COPY --chown=user:user . /app
 # Download EVERYTHING from the HF Model repo:
 #   - data/npz/*.npz  → 4.5 GB real EEG dataset (enables Live Data Mode)
 #   - models/*.pth    → 61 trained EEGNet subject weights (enables real predictions)
-RUN python -c " \
+RUN python -c "\
 from huggingface_hub import snapshot_download; \
 print('Downloading full EEG dataset + model weights from HF...'); \
 snapshot_download( \
