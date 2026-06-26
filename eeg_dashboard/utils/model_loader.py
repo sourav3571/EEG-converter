@@ -13,18 +13,34 @@ try:
 except Exception as e:
     pass
 
+
+def _get_model_base():
+    """
+    Robust path resolution for model directory.
+    Works in local dev, Docker container, and HF Spaces.
+    """
+    _current_dir = os.path.dirname(os.path.abspath(__file__))
+    _candidate_paths = [
+        os.path.join(_current_dir, "../../Large_Spanish_EEG/models"),  # local dev (relative to this file)
+        "/app/Large_Spanish_EEG/models",                                # HF Spaces Docker
+        os.path.abspath("../Large_Spanish_EEG/models"),                 # alt local
+        os.path.abspath("Large_Spanish_EEG/models"),                    # alt cwd
+    ]
+    for path in _candidate_paths:
+        if os.path.isdir(path):
+            print(f"[model_loader] Found models at: {path}")
+            return path
+    print(f"[model_loader] WARNING: No model directory found. Tried: {_candidate_paths}")
+    return _candidate_paths[0]
+
+
 @st.cache_resource
 def load_eegnet_model(subject=None):
     """
     Attempts to load the real trained PyTorch model weights from disk.
     Falls back to a simulated/mock setup if not available.
     """
-    # Auto-detect the models base directory (local dev vs Docker container)
-    _model_bases = [
-        "../Large_Spanish_EEG/models",      # local development
-        "/app/Large_Spanish_EEG/models",    # HF Spaces Docker
-    ]
-    _model_base = next((b for b in _model_bases if os.path.isdir(b)), "../Large_Spanish_EEG/models")
+    _model_base = _get_model_base()
 
     model_paths = []
     if subject:
@@ -36,6 +52,8 @@ def load_eegnet_model(subject=None):
         f"{_model_base}/eegnet_scratch_stims5.pth",
         f"{_model_base}/eegnet_finetuned_stims5.pth"
     ])
+    
+    print(f"[model_loader] Trying paths for subject={subject}: {model_paths}")
     
     for path in model_paths:
         if os.path.exists(path):
@@ -50,6 +68,7 @@ def load_eegnet_model(subject=None):
                 model = EEGNetPyTorch(nb_classes=nb_classes, Chans=14, Samples=750)
                 model.load_state_dict(torch.load(path, map_location=torch.device('cpu')))
                 model.eval()
+                print(f"[model_loader] Successfully loaded: {path}")
                 return {
                     "status": f"Real Weights Loaded from {os.path.basename(path)}",
                     "architecture": "EEGNet-8,2 (PyTorch)",
@@ -59,8 +78,10 @@ def load_eegnet_model(subject=None):
                     "nb_classes": nb_classes
                 }
             except Exception as e:
+                print(f"[model_loader] Failed to load {path}: {e}")
                 pass
                 
+    print(f"[model_loader] No model file found, returning mock")
     return {
         "status": "Weights initialized (Simulated)",
         "architecture": "EEGNet-8,2 (Mock)",
@@ -167,7 +188,13 @@ def get_training_history(epochs=80):
     Attempts to load the real model training history from CSV, or
     generates realistic, scientifically accurate simulated histories.
     """
+    _model_base = _get_model_base()
+    _results_base = os.path.join(os.path.dirname(_model_base), "results")
+    
     history_paths = [
+        os.path.join(_results_base, "history_mixed_stims5.csv"),
+        os.path.join(_results_base, "history_scratch_stims5.csv"),
+        os.path.join(_results_base, "history_finetuned_stims5.csv"),
         "../Large_Spanish_EEG/results/history_mixed_stims5.csv",
         "../Large_Spanish_EEG/results/history_scratch_stims5.csv",
         "../Large_Spanish_EEG/results/history_finetuned_stims5.csv"
@@ -265,12 +292,8 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
     # Compute embeddings for standard sentences (tensor representation)
     std_embeddings = model_st.encode(standard_sentences, convert_to_tensor=True)
     
-    # Auto-detect the models base directory (local dev vs Docker container)
-    _model_bases = [
-        "../Large_Spanish_EEG/models",      # local development
-        "/app/Large_Spanish_EEG/models",    # HF Spaces Docker
-    ]
-    _model_base = next((b for b in _model_bases if os.path.isdir(b)), "../Large_Spanish_EEG/models")
+    # Auto-detect the models base directory (robust path resolution)
+    _model_base = _get_model_base()
     contrastive_model_path = f"{_model_base}/eegnet_contrastive.pth"
     use_real = False
     
@@ -381,4 +404,3 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
             "band_saliency": band_saliency
         }
     }
-
