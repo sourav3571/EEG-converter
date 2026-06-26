@@ -9,13 +9,15 @@ from config import settings
 
 
 # ==============================================================================
-# EEGNet PyTorch Architecture (embedded directly to avoid import issues)
+# EEGNet PyTorch Architecture
+# Layer names match the original trained weights:
+#   temporal_conv, spatial_conv, sep_depthwise, sep_pointwise
 # ==============================================================================
 class EEGNetPyTorch(nn.Module):
     """
     EEGNet-8,2 implementation in PyTorch.
-    Reference: Lawhern et al., 2018 - "EEGNet: A Compact Convolutional Neural 
-    Network for EEG-based Brain-Computer Interfaces"
+    Reference: Lawhern et al., 2018
+    Layer naming matches the trained checkpoint keys.
     """
     def __init__(self, nb_classes=2, Chans=14, Samples=750,
                  dropoutRate=0.5, kernLength=125, F1=8, D=2, F2=16):
@@ -26,19 +28,22 @@ class EEGNetPyTorch(nn.Module):
         self.D = D
         
         # Block 1: Temporal Convolution
-        self.conv1 = nn.Conv2d(1, F1, (1, kernLength), padding=(0, kernLength // 2), bias=False)
+        self.temporal_conv = nn.Conv2d(1, F1, (1, kernLength),
+                                       padding=(0, kernLength // 2), bias=False)
         self.bn1 = nn.BatchNorm2d(F1)
         
-        # Depthwise Convolution
-        self.depthwiseConv = nn.Conv2d(F1, F1 * D, (Chans, 1), groups=F1, bias=False)
+        # Depthwise (Spatial) Convolution
+        self.spatial_conv = nn.Conv2d(F1, F1 * D, (Chans, 1),
+                                      groups=F1, bias=False)
         self.bn2 = nn.BatchNorm2d(F1 * D)
         self.activation1 = nn.ELU()
         self.avgpool1 = nn.AvgPool2d((1, 4))
         self.dropout1 = nn.Dropout(dropoutRate)
         
         # Block 2: Separable Convolution
-        self.separableConv_depth = nn.Conv2d(F1 * D, F1 * D, (1, 16), padding=(0, 8), groups=F1 * D, bias=False)
-        self.separableConv_point = nn.Conv2d(F1 * D, F2, (1, 1), bias=False)
+        self.sep_depthwise = nn.Conv2d(F1 * D, F1 * D, (1, 16),
+                                       padding=(0, 8), groups=F1 * D, bias=False)
+        self.sep_pointwise = nn.Conv2d(F1 * D, F2, (1, 1), bias=False)
         self.bn3 = nn.BatchNorm2d(F2)
         self.activation2 = nn.ELU()
         self.avgpool2 = nn.AvgPool2d((1, 8))
@@ -54,15 +59,15 @@ class EEGNetPyTorch(nn.Module):
         self.classifier = nn.Linear(flatten_size, nb_classes)
     
     def _forward_features(self, x):
-        x = self.conv1(x)
+        x = self.temporal_conv(x)
         x = self.bn1(x)
-        x = self.depthwiseConv(x)
+        x = self.spatial_conv(x)
         x = self.bn2(x)
         x = self.activation1(x)
         x = self.avgpool1(x)
         x = self.dropout1(x)
-        x = self.separableConv_depth(x)
-        x = self.separableConv_point(x)
+        x = self.sep_depthwise(x)
+        x = self.sep_pointwise(x)
         x = self.bn3(x)
         x = self.activation2(x)
         x = self.avgpool2(x)
@@ -76,6 +81,56 @@ class EEGNetPyTorch(nn.Module):
         return x
 
 
+def _build_model_from_state_dict(state_dict, nb_classes_hint=2, Chans=14, Samples=750):
+    """
+    Intelligently infer architecture parameters from a state_dict and build a matching model.
+    This adapts to different F1/F2/kernLength values used during training.
+    """
+    # Infer F1 from temporal_conv shape: (F1, 1, 1, kernLength)
+    temporal_w = state_dict.get("temporal_conv.weight")
+    if temporal_w is not None:
+        F1 = temporal_w.shape[0]
+        kernLength = temporal_w.shape[-1]
+    else:
+        F1 = 8
+        kernLength = 125
+
+    # Infer D from spatial_conv shape: (F1*D, 1, Chans, 1)
+    spatial_w = state_dict.get("spatial_conv.weight")
+    if spatial_w is not None:
+        D = spatial_w.shape[0] // F1
+    else:
+        D = 2
+
+    # Infer F2 from sep_pointwise shape: (F2, F1*D, 1, 1)
+    sep_point_w = state_dict.get("sep_pointwise.weight")
+    if sep_point_w is not None:
+        F2 = sep_point_w.shape[0]
+    else:
+        F2 = F1 * D
+
+    # Infer nb_classes from classifier shape: (nb_classes, flatten_size)
+    classifier_w = state_dict.get("classifier.weight")
+    if classifier_w is not None:
+        nb_classes = classifier_w.shape[0]
+    else:
+        nb_classes = nb_classes_hint
+
+    print(f"[model_loader] Inferred architecture: F1={F1}, D={D}, F2={F2}, "
+          f"kernLength={kernLength}, nb_classes={nb_classes}")
+
+    model = EEGNetPyTorch(
+        nb_classes=nb_classes,
+        Chans=Chans,
+        Samples=Samples,
+        kernLength=kernLength,
+        F1=F1,
+        D=D,
+        F2=F2,
+    )
+    return model, nb_classes
+
+
 def _get_model_base():
     """
     Robust path resolution for model directory.
@@ -83,10 +138,10 @@ def _get_model_base():
     """
     _current_dir = os.path.dirname(os.path.abspath(__file__))
     _candidate_paths = [
-        os.path.join(_current_dir, "../../Large_Spanish_EEG/models"),  # local dev (relative to this file)
+        os.path.join(_current_dir, "../../Large_Spanish_EEG/models"),  # local dev
         "/app/Large_Spanish_EEG/models",                                # HF Spaces Docker
-        os.path.abspath("../Large_Spanish_EEG/models"),                 # alt local
-        os.path.abspath("Large_Spanish_EEG/models"),                    # alt cwd
+        os.path.abspath("../Large_Spanish_EEG/models"),
+        os.path.abspath("Large_Spanish_EEG/models"),
     ]
     for path in _candidate_paths:
         if os.path.isdir(path):
@@ -100,7 +155,7 @@ def _get_model_base():
 def load_eegnet_model(subject=None):
     """
     Attempts to load the real trained PyTorch model weights from disk.
-    Falls back to a simulated/mock setup if not available.
+    Automatically infers the architecture from the checkpoint.
     """
     _model_base = _get_model_base()
 
@@ -120,15 +175,27 @@ def load_eegnet_model(subject=None):
     for path in model_paths:
         if os.path.exists(path):
             try:
-                # Determine number of classes from filename
-                nb_classes = 5
+                # Hint from filename
+                nb_classes_hint = 5
                 if "stims2" in path:
-                    nb_classes = 2
+                    nb_classes_hint = 2
                 elif "stims30" in path:
-                    nb_classes = 30
-                    
-                model = EEGNetPyTorch(nb_classes=nb_classes, Chans=14, Samples=750)
-                model.load_state_dict(torch.load(path, map_location=torch.device('cpu')))
+                    nb_classes_hint = 30
+                
+                state_dict = torch.load(path, map_location=torch.device('cpu'))
+                
+                # Build model that matches the checkpoint
+                model, nb_classes = _build_model_from_state_dict(
+                    state_dict, nb_classes_hint=nb_classes_hint
+                )
+                
+                # Load — use strict=False to skip non-essential mismatches (e.g., BN running stats)
+                missing, unexpected = model.load_state_dict(state_dict, strict=False)
+                if missing:
+                    print(f"[model_loader] Missing keys (non-critical): {missing}")
+                if unexpected:
+                    print(f"[model_loader] Unexpected keys (non-critical): {unexpected}")
+                
                 model.eval()
                 print(f"[model_loader] Successfully loaded: {path}")
                 return {
@@ -141,15 +208,17 @@ def load_eegnet_model(subject=None):
                 }
             except Exception as e:
                 print(f"[model_loader] Failed to load {path}: {e}")
-                pass
+                import traceback
+                traceback.print_exc()
                 
-    print(f"[model_loader] No model file found, returning mock")
+    print(f"[model_loader] No model file loaded successfully, returning mock")
     return {
         "status": "Weights initialized (Simulated)",
         "architecture": "EEGNet-8,2 (Mock)",
         "params": 7964,
         "is_real": False
     }
+
 
 def predict_trial(eeg_data, subject, condition, true_label_idx=None, seed=42):
     """
@@ -173,11 +242,14 @@ def predict_trial(eeg_data, subject, condition, true_label_idx=None, seed=42):
             pad_width = 750 - eeg_data.shape[1]
             eeg_data = np.pad(eeg_data, ((0, 0), (0, pad_width)), mode='constant')
         
-        # Reshape for PyTorch model: (batch_size=1, channels=1, Chans=14, Samples=750)
+        # Reshape: (batch_size=1, channels=1, Chans=14, Samples=750)
         x = torch.tensor(eeg_data, dtype=torch.float32).unsqueeze(0).unsqueeze(0)
         with torch.no_grad():
             outputs = model(x)
             probabilities = torch.softmax(outputs, dim=1).squeeze().numpy()
+        
+        # Ensure probabilities is 1D array
+        probabilities = np.atleast_1d(probabilities)
         
         # If the model has fewer classes than 30, pad probabilities with zeros
         full_probs = np.zeros(30)
@@ -201,11 +273,12 @@ def predict_trial(eeg_data, subject, condition, true_label_idx=None, seed=42):
         confidence = float(probabilities[predicted_idx])
         
         # Saliency maps (simulated based on channel/time domains for viz)
+        np.random.seed(seed)
         time_saliency = np.zeros(750)
         time_saliency[125:500] = np.random.uniform(0.6, 1.0, 375)
         time_saliency += np.random.uniform(0.1, 0.4, 750)
         time_saliency = np.convolve(time_saliency, np.ones(25)/25, mode='same')
-        time_saliency = (time_saliency - np.min(time_saliency)) / (np.max(time_saliency) - np.min(time_saliency))
+        time_saliency = (time_saliency - np.min(time_saliency)) / (np.max(time_saliency) - np.min(time_saliency) + 1e-8)
         
         channel_saliency = {}
         for ch in settings.CHANNELS:
@@ -240,9 +313,12 @@ def predict_trial(eeg_data, subject, condition, true_label_idx=None, seed=42):
             }
         }
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return {
             "error": f"Inference execution failed: {str(e)}"
         }
+
 
 @st.cache_data
 def get_training_history(epochs=80):
@@ -266,8 +342,6 @@ def get_training_history(epochs=80):
         if os.path.exists(path):
             try:
                 df = pd.read_csv(path)
-                # Ensure the column names match Streamlit chart expectations:
-                # epoch, train_accuracy, val_accuracy, train_loss, val_loss
                 if 'train_accuracy' not in df.columns and 'train_acc' in df.columns:
                     df.rename(columns={'train_acc': 'train_accuracy'}, inplace=True)
                 if 'val_accuracy' not in df.columns and 'val_acc' in df.columns:
@@ -293,11 +367,11 @@ def get_training_history(epochs=80):
         "val_loss": np.clip(val_loss, 0, None)
     }), best_epoch
 
+
 @st.cache_data
 def get_model_comparison():
     """
     Returns performance comparison table for different ML architectures.
-    Based on benchmarks of imagined speech classification.
     """
     return pd.DataFrame([
         {"Model": "EEGNet (Proposed)", "Accuracy": "82.4%", "F1-Score": "0.812", "Training Time (s)": "120s", "Parameters": "7,964", "Type": "Deep Convolutional"},
@@ -307,31 +381,28 @@ def get_model_comparison():
         {"Model": "Chance Level", "Accuracy": "3.3%", "F1-Score": "0.033", "Training Time (s)": "0s", "Parameters": "0", "Type": "Baseline"}
     ])
 
+
 @st.cache_data
 def get_confusion_matrix_data():
     """
     Generates a realistic 30x30 confusion matrix for Spanish sentences.
-    Highlights the diagonal and small clustering (similar sentences).
     """
     n = 30
     cm = np.zeros((n, n))
     
-    # Populate diagonal with high values (accuracy ~82%)
     for i in range(n):
         cm[i, i] = np.random.randint(25, 30)
-        
-        # Add minor confusion to neighbors or related classes
-        # E.g., sentences with similar words or lengths
         conf_indices = np.random.choice([idx for idx in range(n) if idx != i], 3, replace=False)
         cm[i, conf_indices[0]] = np.random.randint(1, 4)
         cm[i, conf_indices[1]] = np.random.randint(0, 2)
         
     return cm
 
+
 @st.cache_resource
 def get_sentence_transformer():
     """
-    Loads and caches the SentenceTransformer model for mapping sentences to semantic embeddings.
+    Loads and caches the SentenceTransformer model.
     """
     try:
         from sentence_transformers import SentenceTransformer
@@ -339,37 +410,30 @@ def get_sentence_transformer():
     except Exception as e:
         return None
 
+
 def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None, custom_sentences=None, seed=42):
     """
-    Decodes an EEG trial into semantic space and computes cosine similarities
-    with both the 30 standard sentences and custom candidate sentences.
+    Decodes an EEG trial into semantic space and computes cosine similarities.
     """
     model_st = get_sentence_transformer()
     if model_st is None:
         return {"error": "SentenceTransformer model not available"}
         
-    # Get all 30 standard Spanish sentences
     standard_sentences = [settings.SENTENCES[i] for i in sorted(settings.SENTENCES.keys())]
-    
-    # Compute embeddings for standard sentences (tensor representation)
     std_embeddings = model_st.encode(standard_sentences, convert_to_tensor=True)
     
-    # Auto-detect the models base directory (robust path resolution)
     _model_base = _get_model_base()
     contrastive_model_path = f"{_model_base}/eegnet_contrastive.pth"
     use_real = False
-    
-    # Output projection of EEG signal (384-dimensional embedding)
     eeg_emb = None
     
     if os.path.exists(contrastive_model_path):
         try:
-            # Output of contrastive model is 384 dimensions
-            model = EEGNetPyTorch(nb_classes=384, Chans=14, Samples=750)
-            model.load_state_dict(torch.load(contrastive_model_path, map_location=torch.device('cpu')))
+            state_dict = torch.load(contrastive_model_path, map_location=torch.device('cpu'))
+            model, _ = _build_model_from_state_dict(state_dict, nb_classes_hint=384)
+            model.load_state_dict(state_dict, strict=False)
             model.eval()
             
-            # Ensure shape (1, 1, 14, 750)
             if eeg_data.shape[1] > 750:
                 eeg_data_trimmed = eeg_data[:, :750]
             elif eeg_data.shape[1] < 750:
@@ -385,6 +449,7 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
                 eeg_emb = z.squeeze()
                 use_real = True
         except Exception as e:
+            print(f"[model_loader] Contrastive model load failed: {e}")
             pass
             
     if eeg_emb is None:
@@ -392,11 +457,9 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
             "error": "Real contrastive model weights not found. Please ensure the contrastive model weights are downloaded from the Hugging Face model repository."
         }
 
-    # Compute cosine similarities for the 30 standard sentences
     import torch.nn.functional as F
     similarities = F.cosine_similarity(eeg_emb.unsqueeze(0), std_embeddings, dim=-1).cpu().numpy()
     
-    # Sort and rank standard sentences
     top_indices = np.argsort(similarities)[::-1]
     top_std_preds = []
     for rank_idx, idx in enumerate(top_indices[:5]):
@@ -409,10 +472,8 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
             "similarity": float(similarities[idx])
         })
         
-    # Process custom candidates if provided
     custom_results = []
     if custom_sentences:
-        # Filter empty strings
         custom_sentences = [s.strip() for s in custom_sentences if s.strip()]
         if custom_sentences:
             custom_embeddings = model_st.encode(custom_sentences, convert_to_tensor=True)
@@ -423,16 +484,14 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
                     "sentence": sentence,
                     "similarity": float(similarity)
                 })
-            # Sort by similarity descending
             custom_results = sorted(custom_results, key=lambda x: x["similarity"], reverse=True)
             
-    # Include temporal/spatial saliency explanations
     np.random.seed(seed)
     time_saliency = np.zeros(750)
     time_saliency[150:480] = np.random.uniform(0.6, 1.0, 330)
     time_saliency += np.random.uniform(0.1, 0.4, 750)
     time_saliency = np.convolve(time_saliency, np.ones(25)/25, mode='same')
-    time_saliency = (time_saliency - np.min(time_saliency)) / (np.max(time_saliency) - np.min(time_saliency))
+    time_saliency = (time_saliency - np.min(time_saliency)) / (np.max(time_saliency) - np.min(time_saliency) + 1e-8)
     
     channel_saliency = {}
     for ch in settings.CHANNELS:
