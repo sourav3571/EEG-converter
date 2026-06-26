@@ -63,8 +63,8 @@ export default function Sidebar({ activePage, setActivePage, status, selectors, 
             <label className="form-label">Condition</label>
             <select className="select-custom" value={selectors.condition}
               onChange={e => setSelectors(s => ({ ...s, condition: Number(e.target.value) }))}>
-              {Object.entries(conditions).map(([idx, name]) => (
-                <option key={idx} value={idx}>{name}</option>
+              {Object.entries(conditions).map(([key, name], idx) => (
+                <option key={key} value={idx}>{name}</option>
               ))}
             </select>
           </div>
