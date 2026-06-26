@@ -9,5 +9,6 @@ mne==1.12.1
 requests==2.32.5
 matplotlib==3.10.9
 tqdm==4.67.1
-fastapi==0.115.0
+fastapi>=0.116.0
+starlette>=0.40.0
 uvicorn==0.30.1
