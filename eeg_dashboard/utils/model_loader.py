@@ -4,14 +4,76 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import torch
+import torch.nn as nn
 from config import settings
 
-# Try to add parent directories to sys.path so we can import the model
-try:
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../Large_Spanish_EEG')))
-    from src.models_pytorch import EEGNetPyTorch
-except Exception as e:
-    pass
+
+# ==============================================================================
+# EEGNet PyTorch Architecture (embedded directly to avoid import issues)
+# ==============================================================================
+class EEGNetPyTorch(nn.Module):
+    """
+    EEGNet-8,2 implementation in PyTorch.
+    Reference: Lawhern et al., 2018 - "EEGNet: A Compact Convolutional Neural 
+    Network for EEG-based Brain-Computer Interfaces"
+    """
+    def __init__(self, nb_classes=2, Chans=14, Samples=750,
+                 dropoutRate=0.5, kernLength=125, F1=8, D=2, F2=16):
+        super(EEGNetPyTorch, self).__init__()
+        
+        self.F1 = F1
+        self.F2 = F2
+        self.D = D
+        
+        # Block 1: Temporal Convolution
+        self.conv1 = nn.Conv2d(1, F1, (1, kernLength), padding=(0, kernLength // 2), bias=False)
+        self.bn1 = nn.BatchNorm2d(F1)
+        
+        # Depthwise Convolution
+        self.depthwiseConv = nn.Conv2d(F1, F1 * D, (Chans, 1), groups=F1, bias=False)
+        self.bn2 = nn.BatchNorm2d(F1 * D)
+        self.activation1 = nn.ELU()
+        self.avgpool1 = nn.AvgPool2d((1, 4))
+        self.dropout1 = nn.Dropout(dropoutRate)
+        
+        # Block 2: Separable Convolution
+        self.separableConv_depth = nn.Conv2d(F1 * D, F1 * D, (1, 16), padding=(0, 8), groups=F1 * D, bias=False)
+        self.separableConv_point = nn.Conv2d(F1 * D, F2, (1, 1), bias=False)
+        self.bn3 = nn.BatchNorm2d(F2)
+        self.activation2 = nn.ELU()
+        self.avgpool2 = nn.AvgPool2d((1, 8))
+        self.dropout2 = nn.Dropout(dropoutRate)
+        
+        # Compute flatten size dynamically
+        with torch.no_grad():
+            dummy = torch.zeros(1, 1, Chans, Samples)
+            out = self._forward_features(dummy)
+            flatten_size = out.numel()
+        
+        # Classifier
+        self.classifier = nn.Linear(flatten_size, nb_classes)
+    
+    def _forward_features(self, x):
+        x = self.conv1(x)
+        x = self.bn1(x)
+        x = self.depthwiseConv(x)
+        x = self.bn2(x)
+        x = self.activation1(x)
+        x = self.avgpool1(x)
+        x = self.dropout1(x)
+        x = self.separableConv_depth(x)
+        x = self.separableConv_point(x)
+        x = self.bn3(x)
+        x = self.activation2(x)
+        x = self.avgpool2(x)
+        x = self.dropout2(x)
+        return x
+    
+    def forward(self, x):
+        x = self._forward_features(x)
+        x = x.view(x.size(0), -1)
+        x = self.classifier(x)
+        return x
 
 
 def _get_model_base():
