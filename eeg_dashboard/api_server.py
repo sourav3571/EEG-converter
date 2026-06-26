@@ -30,6 +30,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Map integer condition index → string key used in NPZ dataset
+CONDITION_MAP = {
+    0: "perception",
+    1: "production",
+    2: "rest",
+    3: "preparation"
+}
+
+def map_condition(condition):
+    """Convert integer condition to string key used in NPZ data."""
+    if isinstance(condition, int):
+        return CONDITION_MAP.get(condition, "perception")
+    return condition
+
 # Global database holder
 NPZ_FILENAME = "language_average_2-50hz_icaLabel95confidence_eyes_60sessions.npz"
 _candidate_paths = [
@@ -115,7 +129,7 @@ def get_metadata():
 @app.get("/api/trial")
 def get_trial(
     subject: str = Query(..., description="Subject ID, e.g. 01"),
-    condition: int = Query(..., description="Condition index, e.g. 0 (spoken) or 1 (imagined)"),
+    condition: int = Query(..., description="Condition index, e.g. 0 (perception) or 1 (production)"),
     stimulus_idx: int = Query(..., description="Stimulus index, 1-30"),
     trial_idx: int = Query(..., description="Trial index, 0-5"),
     preprocess: bool = Query(True, description="Whether to apply the preprocessing pipeline")
@@ -125,18 +139,21 @@ def get_trial(
             status_code=503,
             detail="Scientific BIDS EEG dataset is offline. Please ensure dataset is downloaded."
         )
+    
+    # Map integer condition → string
+    condition_str = map_condition(condition)
         
     eeg_raw = data_loader.get_real_trial_data(
-        real_data, subject, condition, stimulus_idx, trial_idx
+        real_data, subject, condition_str, stimulus_idx, trial_idx
     )
     
     if eeg_raw is None:
         raise HTTPException(
             status_code=404,
-            detail=f"Trial data not found for Subject {subject}, Condition {condition}, Stimulus {stimulus_idx}, Trial {trial_idx}"
+            detail=f"Trial data not found for Subject {subject}, Condition {condition_str}, Stimulus {stimulus_idx}, Trial {trial_idx}"
         )
         
-    metadata = data_loader.get_demo_subject_metadata(subject, condition, stimulus_idx, trial_idx)
+    metadata = data_loader.get_demo_subject_metadata(subject, condition_str, stimulus_idx, trial_idx)
     
     response = {
         "metadata": metadata,
@@ -148,7 +165,7 @@ def get_trial(
     
     if preprocess:
         # Run preprocessing pipeline
-        seed = hash(f"{subject}_{condition}_{stimulus_idx}_{trial_idx}") % 100000
+        seed = hash(f"{subject}_{condition_str}_{stimulus_idx}_{trial_idx}") % 100000
         eeg_clean, stats = preprocessor.run_preprocessing_pipeline(eeg_raw, seed=seed)
         response["clean_signal"] = eeg_clean.tolist()
         response["preprocessing_stats"] = stats
@@ -163,24 +180,27 @@ def decode_trial(req: DecodeRequest):
             status_code=503,
             detail="Scientific BIDS EEG dataset is offline. Cannot perform inference."
         )
+    
+    # Map integer condition → string
+    condition_str = map_condition(req.condition)
         
     eeg_raw = data_loader.get_real_trial_data(
-        real_data, req.subject, req.condition, req.stimulus_idx, req.trial_idx
+        real_data, req.subject, condition_str, req.stimulus_idx, req.trial_idx
     )
     
     if eeg_raw is None:
         raise HTTPException(
             status_code=404,
-            detail=f"Trial data not found for Subject {req.subject}, Condition {req.condition}, Stimulus {req.stimulus_idx}, Trial {req.trial_idx}"
+            detail=f"Trial data not found for Subject {req.subject}, Condition {condition_str}, Stimulus {req.stimulus_idx}, Trial {req.trial_idx}"
         )
         
     # Preprocess
-    seed = hash(f"{req.subject}_{req.condition}_{req.stimulus_idx}_{req.trial_idx}") % 100000
+    seed = hash(f"{req.subject}_{condition_str}_{req.stimulus_idx}_{req.trial_idx}") % 100000
     eeg_clean, _ = preprocessor.run_preprocessing_pipeline(eeg_raw, seed=seed)
     
     # Run prediction
     res = model_loader.predict_trial(
-        eeg_clean, req.subject, req.condition, true_label_idx=(req.stimulus_idx - 1), seed=seed
+        eeg_clean, req.subject, condition_str, true_label_idx=(req.stimulus_idx - 1), seed=seed
     )
     
     if "error" in res:
@@ -203,24 +223,27 @@ def decode_contrastive(req: ContrastiveDecodeRequest):
             status_code=503,
             detail="Scientific BIDS EEG dataset is offline. Cannot perform inference."
         )
+    
+    # Map integer condition → string
+    condition_str = map_condition(req.condition)
         
     eeg_raw = data_loader.get_real_trial_data(
-        real_data, req.subject, req.condition, req.stimulus_idx, req.trial_idx
+        real_data, req.subject, condition_str, req.stimulus_idx, req.trial_idx
     )
     
     if eeg_raw is None:
         raise HTTPException(
             status_code=404,
-            detail=f"Trial data not found for Subject {req.subject}, Condition {req.condition}, Stimulus {req.stimulus_idx}, Trial {req.trial_idx}"
+            detail=f"Trial data not found for Subject {req.subject}, Condition {condition_str}, Stimulus {req.stimulus_idx}, Trial {req.trial_idx}"
         )
         
     # Preprocess
-    seed = hash(f"{req.subject}_{req.condition}_{req.stimulus_idx}_{req.trial_idx}_zero") % 100000
+    seed = hash(f"{req.subject}_{condition_str}_{req.stimulus_idx}_{req.trial_idx}_zero") % 100000
     eeg_clean, _ = preprocessor.run_preprocessing_pipeline(eeg_raw, seed=seed)
     
     # Run contrastive retrieval prediction
     res = model_loader.predict_contrastive_trial(
-        eeg_clean, req.subject, req.condition, 
+        eeg_clean, req.subject, condition_str, 
         true_label_idx=(req.stimulus_idx - 1),
         custom_sentences=req.custom_sentences,
         seed=seed
