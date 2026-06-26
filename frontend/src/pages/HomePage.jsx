@@ -1,4 +1,4 @@
-import { Brain, Zap, Users, Radio } from 'lucide-react';
+import { Brain, Zap, Users, Radio, Waves } from 'lucide-react';
 
 const STATS = [
   { value: '82.4%', label: 'Decoder Accuracy', accent: true },
