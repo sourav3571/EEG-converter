@@ -56,10 +56,10 @@ export default function AboutPage() {
             <a key={label} href={href} target="_blank" rel="noopener noreferrer"
               style={{
                 fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--accent)',
-                border: '1px solid rgba(0,240,255,0.25)', borderRadius: 4, padding: '6px 12px',
+                border: '1px solid rgba(91,157,249,0.25)', borderRadius: 4, padding: '6px 12px',
                 textDecoration: 'none', transition: 'all 0.2s',
               }}
-              onMouseEnter={e => { e.target.style.background = 'rgba(0,240,255,0.08)'; }}
+              onMouseEnter={e => { e.target.style.background = 'rgba(91,157,249,0.08)'; }}
               onMouseLeave={e => { e.target.style.background = 'transparent'; }}>
               ↗ {label}
             </a>

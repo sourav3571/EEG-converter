@@ -9,11 +9,11 @@ function PSDChart({ data, channels }) {
   const iH = HEIGHT - M.top - M.bottom;
 
   const BANDS = [
-    { name: 'Delta', lo: 0, hi: 0.08, color: 'rgba(100,100,255,0.06)' },
-    { name: 'Theta', lo: 0.08, hi: 0.16, color: 'rgba(0,240,255,0.06)' },
-    { name: 'Alpha', lo: 0.16, hi: 0.26, color: 'rgba(0,255,100,0.06)' },
-    { name: 'Beta',  lo: 0.26, hi: 0.60, color: 'rgba(255,255,0,0.05)' },
-    { name: 'Gamma', lo: 0.60, hi: 1.00, color: 'rgba(255,80,80,0.04)' },
+    { name: 'Delta', lo: 0, hi: 0.08, color: 'rgba(104,117,245,0.06)' },
+    { name: 'Theta', lo: 0.08, hi: 0.16, color: 'rgba(91,157,249,0.06)' },
+    { name: 'Alpha', lo: 0.16, hi: 0.26, color: 'rgba(79,209,197,0.06)' },
+    { name: 'Beta',  lo: 0.26, hi: 0.60, color: 'rgba(226,232,240,0.05)' },
+    { name: 'Gamma', lo: 0.60, hi: 1.00, color: 'rgba(245,101,101,0.04)' },
   ];
 
   // Compute mean PSD across channels via simple variance-like proxy
@@ -35,7 +35,7 @@ function PSDChart({ data, channels }) {
   }).join(' ');
 
   return (
-    <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} style={{ width: '100%', background: '#0A0A12', borderRadius: 8 }}>
+    <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} style={{ width: '100%', background: '#19191B', borderRadius: 8 }}>
       <g transform={`translate(${M.left},${M.top})`}>
         {BANDS.map(({ name, lo, hi, color }) => (
           <g key={name}>
@@ -60,7 +60,7 @@ export default function FrequencyAnalysisPage({ selectors, metadata, apiOnline, 
   const sentences = metadata?.sentences || {};
 
   const BANDS = ['Delta', 'Theta', 'Alpha', 'Beta', 'Gamma'];
-  const BAND_COLORS = { Delta: '#6464FF', Theta: '#00F0FF', Alpha: '#00FF64', Beta: '#FFFF00', Gamma: '#FF5050' };
+  const BAND_COLORS = { Delta: '#6875F5', Theta: '#5B9DF9', Alpha: '#4FD1C5', Beta: '#E2E8F0', Gamma: '#F56565' };
 
   // Compute approximate band powers from raw signal
   function computeBandPowers(rawData) {

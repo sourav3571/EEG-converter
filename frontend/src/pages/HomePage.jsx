@@ -1,8 +1,8 @@
 import { Brain, Zap, Users, Radio, Waves } from 'lucide-react';
 
 const STATS = [
-  { value: '82.4%', label: 'Decoder Accuracy', accent: true },
-  { value: '+79.1%', label: 'Above Chance', purple: true },
+  { value: '82.4%', label: 'Decoder Accuracy' },
+  { value: '+79.1%', label: 'Above Chance' },
   { value: '56', label: 'Cohort Subjects' },
   { value: '14', label: 'LH Channels' },
 ];
@@ -11,7 +11,7 @@ const STATS = [
 function BrainMap() {
   return (
     <div style={{
-      background: 'radial-gradient(circle, #1a1c29 0%, #10111a 100%)',
+      background: 'radial-gradient(circle, #19191B 0%, #0E0E0E 100%)',
       border: '1px solid var(--border-default)',
       borderRadius: 12,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -20,12 +20,12 @@ function BrainMap() {
       <svg viewBox="0 0 100 100" style={{ width: '85%', height: '85%' }}>
         {/* Brain outline */}
         <path d="M 50 15 C 20 15, 10 30, 10 50 C 10 70, 25 85, 45 85 C 48 85, 50 82, 50 80 C 50 82, 52 85, 55 85 C 75 85, 90 70, 90 50 C 90 30, 80 15, 50 15 Z"
-          fill="none" stroke="#2A2A3A" strokeWidth="1.2" />
-        <path d="M 50 15 C 40 25, 42 75, 50 80" fill="none" stroke="#1F1F2F" strokeWidth="0.8" />
+          fill="none" stroke="#222225" strokeWidth="1.2" />
+        <path d="M 50 15 C 40 25, 42 75, 50 80" fill="none" stroke="#1F1F1F" strokeWidth="0.8" />
         {/* Left-hemi connection paths */}
-        <path d="M 25 40 Q 35 45 42 55" fill="none" stroke="var(--accent)" strokeWidth="0.5" strokeDasharray="1 1" opacity="0.5" />
-        <path d="M 22 55 Q 33 60 48 65" fill="none" stroke="var(--accent)" strokeWidth="0.5" strokeDasharray="1 1" opacity="0.5" />
-        <path d="M 30 70 Q 40 68 45 55" fill="none" stroke="var(--accent)" strokeWidth="0.5" strokeDasharray="1 1" opacity="0.5" />
+        <path d="M 25 40 Q 35 45 42 55" fill="none" stroke="var(--accent)" strokeWidth="0.5" strokeDasharray="1 1" opacity="0.3" />
+        <path d="M 22 55 Q 33 60 48 65" fill="none" stroke="var(--accent)" strokeWidth="0.5" strokeDasharray="1 1" opacity="0.3" />
+        <path d="M 30 70 Q 40 68 45 55" fill="none" stroke="var(--accent)" strokeWidth="0.5" strokeDasharray="1 1" opacity="0.3" />
         {/* Electrode dots */}
         {[
           { cx: 25, cy: 40, delay: '0s', label: 'F7' },
@@ -40,7 +40,7 @@ function BrainMap() {
           <g key={label}>
             <circle cx={cx} cy={cy} r={2.5} fill="var(--accent)"
               style={{ animation: `pulse 2.5s ${delay} infinite ease-in-out` }} />
-            <text x={cx + 3.5} y={cy + 1} fontSize={2.5} fill="rgba(200,230,255,0.5)"
+            <text x={cx + 3.5} y={cy + 1} fontSize={2.5} fill="rgba(200,230,255,0.4)"
               fontFamily="JetBrains Mono, monospace">{label}</text>
           </g>
         ))}
@@ -83,7 +83,7 @@ export default function HomePage({ setActivePage }) {
               <Brain size={14} /> Run Prediction Console
             </button>
             <button onClick={() => setActivePage('about')}
-              style={{ background: 'transparent', border: '1px solid var(--border-default)', color: 'var(--text-light)', borderRadius: 6, padding: '12px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
+              style={{ background: 'transparent', border: '1px solid var(--border-default)', color: 'var(--text-light)', borderRadius: 100, padding: '12px 24px', fontSize: 13, fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}
               onMouseEnter={e => { e.target.style.borderColor = 'var(--accent)'; e.target.style.color = 'var(--text-white)'; }}
               onMouseLeave={e => { e.target.style.borderColor = 'var(--border-default)'; e.target.style.color = 'var(--text-light)'; }}>
               View Methodology
@@ -99,9 +99,9 @@ export default function HomePage({ setActivePage }) {
         background: 'var(--border-default)', border: '1px solid var(--border-default)',
         borderRadius: 10, overflow: 'hidden', marginBottom: 48,
       }}>
-        {STATS.map(({ value, label, accent, purple }) => (
-          <div key={label} style={{ background: 'var(--bg-card)', padding: '20px 24px' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.8rem', fontWeight: 800, color: accent ? 'var(--accent)' : purple ? 'var(--accent-secondary)' : 'var(--text-white)' }}>
+        {STATS.map(({ value, label }) => (
+          <div key={label} style={{ background: 'var(--bg-card)', padding: '24px 28px' }}>
+            <div style={{ fontFamily: 'var(--font-sans)', fontSize: '40px', fontWeight: 500, color: 'var(--accent)', lineHeight: 1.1 }}>
               {value}
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 4 }}>
@@ -119,10 +119,10 @@ export default function HomePage({ setActivePage }) {
           { icon: Radio, title: 'Zero-Shot Retrieval', desc: 'Multilingual SentenceTransformer cosine similarity — decode any candidate phrase.', page: 'prediction' },
         ].map(({ icon: Icon, title, desc, page }) => (
           <div key={title} className="glass-card" style={{ cursor: 'pointer' }} onClick={() => setActivePage(page)}>
-            <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(0,240,255,0.08)', border: '1px solid rgba(0,240,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
+            <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(91,157,249,0.08)', border: '1px solid rgba(91,157,249,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
               <Icon size={16} color="var(--accent)" />
             </div>
-            <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>{title}</h3>
+            <h3 style={{ fontSize: 15, fontWeight: 600, marginBottom: 8 }}>{title}</h3>
             <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>{desc}</p>
           </div>
         ))}

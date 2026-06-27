@@ -11,7 +11,7 @@ export default function WaveformChart({ data, channels, title = 'EEG Signal', co
   const displayChannels = channels.slice(0, 3);
   const rowH = innerH / displayChannels.length;
 
-  const COLORS = ['#00F0FF', '#BD00FF', '#10B981'];
+  const COLORS = ['#5B9DF9', '#8EB9FA', '#4FD1C5'];
 
   return (
     <div style={{ width: '100%' }}>
@@ -19,7 +19,7 @@ export default function WaveformChart({ data, channels, title = 'EEG Signal', co
         {title}
       </p>
       <div style={{ width: '100%', overflowX: 'auto' }}>
-        <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} style={{ width: '100%', background: '#0A0A12', borderRadius: 8 }}>
+        <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} style={{ width: '100%', background: '#19191B', borderRadius: 8 }}>
           <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
             {displayChannels.map((ch, ci) => {
               const row = data[ci] || [];

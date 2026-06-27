@@ -1,2 +1,7 @@
 @echo off
-streamlit run eeg_dashboard/app.py
+echo Starting EEG Decoder Backend (FastAPI on http://localhost:7860)...
+start "EEG Backend" cmd /k "uvicorn eeg_dashboard.api_server:app --reload --port 7860"
+
+echo Starting EEG Decoder Frontend (React/Vite)...
+cd frontend
+npm run dev

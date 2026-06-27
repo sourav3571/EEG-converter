@@ -34,7 +34,7 @@ function TopoMap({ amplitudes, channels }) {
   return (
     <svg viewBox="0 0 100 100" style={{ width: '100%', maxWidth: 420, display: 'block', margin: '0 auto' }}>
       {/* Head circle */}
-      <circle cx={50} cy={50} r={42} fill="#0E0F18" stroke="var(--border-default)" strokeWidth={1} />
+      <circle cx={50} cy={50} r={42} fill="#19191B" stroke="var(--border-default)" strokeWidth={1} />
       {/* Nose */}
       <path d="M 46 10 Q 50 5 54 10" fill="none" stroke="var(--border-default)" strokeWidth={0.8} />
       {/* Electrode bubbles */}
