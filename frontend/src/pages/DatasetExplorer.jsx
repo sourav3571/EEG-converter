@@ -4,7 +4,7 @@ import WaveformChart from '../WaveformChart';
 
 function OfflineAlert() {
   return (
-    <div className="alert-card alert-warning" style={{ color: 'var(--text-light-primary)', borderColor: '#E0E0E0', backgroundColor: '#F8F8F8' }}>
+    <div className="alert-card alert-warning">
       <span style={{ fontSize: 20 }}>⚠️</span>
       <div className="alert-message">
         <p><strong>Scientific Dataset is Offline</strong></p>

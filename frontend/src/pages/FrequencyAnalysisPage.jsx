@@ -12,7 +12,7 @@ function PSDChart({ data, channels }) {
     { name: 'Delta', lo: 0, hi: 0.08, color: 'rgba(0,0,0,0.015)' },
     { name: 'Theta', lo: 0.08, hi: 0.16, color: 'rgba(0,0,0,0.03)' },
     { name: 'Alpha', lo: 0.16, hi: 0.26, color: 'rgba(0,0,0,0.045)' },
-    { name: 'Beta',  lo: 0.26, hi: 0.60, color: 'rgba(0,0,0,0.06)' },
+    { name: 'Beta', lo: 0.26, hi: 0.60, color: 'rgba(0,0,0,0.06)' },
     { name: 'Gamma', lo: 0.60, hi: 1.00, color: 'rgba(0,0,0,0.08)' },
   ];
 
@@ -125,7 +125,7 @@ export default function FrequencyAnalysisPage({ selectors, metadata, apiOnline, 
                 { name: 'Delta', range: '0.5–4 Hz', role: 'Deep sleep, unconscious processing' },
                 { name: 'Theta', range: '4–8 Hz', role: 'Working memory, language encoding' },
                 { name: 'Alpha', range: '8–13 Hz', role: 'Idle state, visual suppression' },
-                { name: 'Beta',  range: '13–30 Hz', role: 'Active thinking, motor control' },
+                { name: 'Beta', range: '13–30 Hz', role: 'Active thinking, motor control' },
                 { name: 'Gamma', range: '30–50 Hz', role: 'Higher cognition, binding' },
               ].map(({ name, range, role }) => (
                 <div key={name} style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'flex-start' }}>

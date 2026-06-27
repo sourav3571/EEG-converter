@@ -3,8 +3,8 @@
 :root {
   /* Strict Editorial Consulting Palette */
   --bg-dark: #0E0E0E;
-  --bg-light: #FFFFFF;
-  --bg-card-light: #F8F8F8;
+  --bg-light: #F9F9FA;
+  --bg-card-light: #FFFFFF;
   --bg-card-dark: #161616;
   
   --accent: #C5F73E; /* Lime Green */
@@ -247,8 +247,8 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   gap: 20px;
   transition: transform 0.2s;
-  border: none;
-  box-shadow: none;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.015), 0 8px 24px rgba(0, 0, 0, 0.02);
 }
 
 .light-card-icon {
@@ -556,6 +556,30 @@ h1, h2, h3, h4, h5, h6 {
   gap: 16px;
   align-items: flex-start;
   color: #FFFFFF;
+}
+
+.alert-card.alert-warning {
+  background-color: var(--bg-card-light);
+  border: 1px solid var(--border-light);
+  color: var(--text-light-primary);
+}
+
+.section-dark .alert-card.alert-warning {
+  background-color: var(--bg-card-dark);
+  border: 1px solid var(--border-dark);
+  color: var(--text-dark-primary);
+}
+
+.alert-card.alert-error {
+  background-color: #FFF5F5;
+  border: 1px solid #FEB2B2;
+  color: #C53030;
+}
+
+.section-dark .alert-card.alert-error {
+  background-color: #2D1A1A;
+  border: 1px solid #742A2A;
+  color: #FEB2B2;
 }
 
 .alert-message {

@@ -29,7 +29,7 @@ export default function PreprocessingPage({ selectors, metadata, apiOnline }) {
   return (
     <div>
       {!apiOnline && (
-        <div className="alert-card alert-warning" style={{ color: 'var(--text-light-primary)', borderColor: '#E0E0E0', backgroundColor: '#F8F8F8' }}>
+        <div className="alert-card alert-warning">
           <span>⚠️</span>
           <div className="alert-message">
             <strong>Dataset Offline</strong> — preprocessing cannot run without the BIDS EEG dataset.

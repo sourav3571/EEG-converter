@@ -1,11 +1,11 @@
 // Brain Topography page — renders a 2D scalp map of channel amplitudes from live data
 
 const CHANNEL_POSITIONS = {
-  'F7':  { x: 20, y: 28 }, 'F5':  { x: 28, y: 25 }, 'F3':  { x: 36, y: 23 },
-  'FC5': { x: 22, y: 40 }, 'FC3': { x: 31, y: 37 }, 'C5':  { x: 22, y: 52 },
-  'C3':  { x: 32, y: 50 }, 'CP5': { x: 22, y: 63 }, 'CP3': { x: 33, y: 61 },
-  'T7':  { x: 16, y: 50 }, 'TP7': { x: 18, y: 62 }, 'P7':  { x: 22, y: 74 },
-  'P5':  { x: 30, y: 72 }, 'P3':  { x: 38, y: 70 },
+  'F7': { x: 20, y: 28 }, 'F5': { x: 28, y: 25 }, 'F3': { x: 36, y: 23 },
+  'FC5': { x: 22, y: 40 }, 'FC3': { x: 31, y: 37 }, 'C5': { x: 22, y: 52 },
+  'C3': { x: 32, y: 50 }, 'CP5': { x: 22, y: 63 }, 'CP3': { x: 33, y: 61 },
+  'T7': { x: 16, y: 50 }, 'TP7': { x: 18, y: 62 }, 'P7': { x: 22, y: 74 },
+  'P5': { x: 30, y: 72 }, 'P3': { x: 38, y: 70 },
 };
 
 function lerp(a, b, t) { return a + (b - a) * t; }
@@ -19,7 +19,7 @@ function amplitudeToColor(norm) {
   const f = t - i;
   const [r1, g1, b1] = stops[Math.min(i, stops.length - 1)];
   const [r2, g2, b2] = stops[Math.min(i + 1, stops.length - 1)];
-  return `rgb(${Math.round(lerp(r1,r2,f))},${Math.round(lerp(g1,g2,f))},${Math.round(lerp(b1,b2,f))})`;
+  return `rgb(${Math.round(lerp(r1, r2, f))},${Math.round(lerp(g1, g2, f))},${Math.round(lerp(b1, b2, f))})`;
 }
 
 function TopoMap({ amplitudes, channels }) {
