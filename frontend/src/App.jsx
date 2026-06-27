@@ -14,6 +14,104 @@ const DEFAULT_SELECTORS = {
   trialIdx: 0,
 };
 
+// Beautiful self-contained animated neuron connection pathway graph
+function HeroNeurons() {
+  return (
+    <div style={{
+      width: '100%',
+      background: 'rgba(255, 255, 255, 0.02)',
+      border: '1px solid #222222',
+      borderRadius: '16px',
+      padding: '28px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '16px',
+      position: 'relative',
+      overflow: 'hidden'
+    }}>
+      <style>{`
+        @keyframes pulse-ring {
+          0% { r: 3px; opacity: 0.8; }
+          100% { r: 15px; opacity: 0; }
+        }
+        @keyframes flow-line {
+          0% { stroke-dashoffset: 80; }
+          100% { stroke-dashoffset: 0; }
+        }
+        @keyframes node-blink {
+          0%, 100% { fill: #444; }
+          50% { fill: var(--accent); }
+        }
+      `}</style>
+      
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dark-secondary)', letterSpacing: '0.05em' }}>
+          NEURAL PATHWAY SIGNAL CONVERTER
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: 10, color: 'var(--accent)' }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--accent)' }} />
+          SYNAPTIC ACTIVITY
+        </span>
+      </div>
+
+      <svg viewBox="0 0 450 200" style={{ width: '100%', height: 'auto', background: '#121212', borderRadius: '8px' }}>
+        {/* Subtle grid backdrop */}
+        <line x1="0" y1="50" x2="450" y2="50" stroke="#181818" strokeWidth="0.5" />
+        <line x1="0" y1="100" x2="450" y2="100" stroke="#181818" strokeWidth="0.5" />
+        <line x1="0" y1="150" x2="450" y2="150" stroke="#181818" strokeWidth="0.5" />
+        <line x1="112" y1="0" x2="112" y2="200" stroke="#181818" strokeWidth="0.5" />
+        <line x1="225" y1="0" x2="225" y2="200" stroke="#181818" strokeWidth="0.5" />
+        <line x1="337" y1="0" x2="337" y2="200" stroke="#181818" strokeWidth="0.5" />
+
+        {/* Structural Dendrite Lines */}
+        <path d="M 50,100 C 130,40 180,160 250,100 S 370,160 400,100" fill="none" stroke="#222222" strokeWidth="1.5" />
+        <path d="M 90,160 C 170,80 220,180 290,120 S 370,40 410,120" fill="none" stroke="#222222" strokeWidth="1.5" />
+        <path d="M 70,60 C 180,140 250,40 320,130 S 380,80 430,90" fill="none" stroke="#222222" strokeWidth="1.5" />
+
+        {/* Diagonal synaptic cross-links */}
+        <line x1="50" y1="100" x2="90" y2="160" stroke="#1a1a1a" strokeWidth="1" strokeDasharray="2 3" />
+        <line x1="250" y1="100" x2="290" y2="120" stroke="#1a1a1a" strokeWidth="1" strokeDasharray="2 3" />
+        <line x1="320" y1="130" x2="400" y2="100" stroke="#1a1a1a" strokeWidth="1" strokeDasharray="2 3" />
+
+        {/* Animated Signal Flows (Stroke Dashes) */}
+        <path d="M 50,100 C 130,40 180,160 250,100 S 370,160 400,100" fill="none" stroke="var(--accent)" strokeWidth="1.5" 
+          strokeDasharray="40 140" style={{ animation: 'flow-line 4s linear infinite' }} />
+        <path d="M 90,160 C 170,80 220,180 290,120 S 370,40 410,120" fill="none" stroke="var(--accent)" strokeWidth="1.5" 
+          strokeDasharray="60 160" style={{ animation: 'flow-line 5s linear infinite reverse' }} />
+        <path d="M 70,60 C 180,140 250,40 320,130 S 380,80 430,90" fill="none" stroke="#FFFFFF" strokeWidth="1" opacity="0.5"
+          strokeDasharray="30 110" style={{ animation: 'flow-line 3s linear infinite' }} />
+
+        {/* Active Node Synapses (Pulsating Rings) */}
+        {/* Node A */}
+        <circle cx="50" cy="100" r="8" fill="none" stroke="var(--accent)" strokeWidth="1" style={{ transformOrigin: '50px 100px', animation: 'pulse-ring 2s infinite' }} />
+        <circle cx="50" cy="100" r="3.5" fill="var(--accent)" />
+        
+        {/* Node B */}
+        <circle cx="250" cy="100" r="9" fill="none" stroke="var(--accent)" strokeWidth="1" style={{ transformOrigin: '250px 100px', animation: 'pulse-ring 2.5s infinite' }} />
+        <circle cx="250" cy="100" r="4" fill="#FFFFFF" />
+
+        {/* Node C */}
+        <circle cx="400" cy="100" r="8" fill="none" stroke="var(--accent)" strokeWidth="1" style={{ transformOrigin: '400px 100px', animation: 'pulse-ring 1.8s infinite' }} />
+        <circle cx="400" cy="100" r="3.5" fill="var(--accent)" />
+
+        {/* Passive/Blinking Synapse Intersections */}
+        <circle cx="90" cy="160" r="2.5" fill="#444444" style={{ animation: 'node-blink 3s infinite 0.5s' }} />
+        <circle cx="290" cy="120" r="2.5" fill="#444444" style={{ animation: 'node-blink 4s infinite 1.2s' }} />
+        <circle cx="410" cy="120" r="2.5" fill="#444444" style={{ animation: 'node-blink 2s infinite 0.3s' }} />
+        <circle cx="70" cy="60" r="2.5" fill="#444444" style={{ animation: 'node-blink 3.5s infinite' }} />
+        <circle cx="320" cy="130" r="2.5" fill="#444444" style={{ animation: 'node-blink 2.8s infinite 1.5s' }} />
+        <circle cx="430" cy="90" r="2.5" fill="#444444" style={{ animation: 'node-blink 3.1s infinite 0.7s' }} />
+      </svg>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-dark-secondary)', fontFamily: 'var(--font-mono)' }}>
+        <span>CONVERGENCE RATE: 99.4%</span>
+        <span>LATENCY: 1.2ms</span>
+        <span>SYNAPSE: ds004279</span>
+      </div>
+    </div>
+  );
+}
+
 // Simple clean SVG line waveform preview for the hero section
 function HeroWaveform() {
   const points = Array.from({ length: 120 }, (_, i) => {
@@ -57,6 +155,7 @@ function HeroWaveform() {
     </div>
   );
 }
+
 
 // Accordion FAQ item component
 function FAQItem({ question, answer }) {
@@ -159,7 +258,7 @@ export default function App() {
               RUN PREDICTION CONSOLE
             </button>
           </div>
-          <HeroWaveform />
+          <HeroNeurons />
         </div>
       </section>
 
