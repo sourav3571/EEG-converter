@@ -9,11 +9,11 @@ function PSDChart({ data, channels }) {
   const iH = HEIGHT - M.top - M.bottom;
 
   const BANDS = [
-    { name: 'Delta', lo: 0, hi: 0.08, color: 'rgba(104,117,245,0.06)' },
-    { name: 'Theta', lo: 0.08, hi: 0.16, color: 'rgba(91,157,249,0.06)' },
-    { name: 'Alpha', lo: 0.16, hi: 0.26, color: 'rgba(79,209,197,0.06)' },
-    { name: 'Beta',  lo: 0.26, hi: 0.60, color: 'rgba(226,232,240,0.05)' },
-    { name: 'Gamma', lo: 0.60, hi: 1.00, color: 'rgba(245,101,101,0.04)' },
+    { name: 'Delta', lo: 0, hi: 0.08, color: 'rgba(0,0,0,0.015)' },
+    { name: 'Theta', lo: 0.08, hi: 0.16, color: 'rgba(0,0,0,0.03)' },
+    { name: 'Alpha', lo: 0.16, hi: 0.26, color: 'rgba(0,0,0,0.045)' },
+    { name: 'Beta',  lo: 0.26, hi: 0.60, color: 'rgba(0,0,0,0.06)' },
+    { name: 'Gamma', lo: 0.60, hi: 1.00, color: 'rgba(0,0,0,0.08)' },
   ];
 
   // Compute mean PSD across channels via simple variance-like proxy
@@ -35,21 +35,21 @@ function PSDChart({ data, channels }) {
   }).join(' ');
 
   return (
-    <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} style={{ width: '100%', background: '#19191B', borderRadius: 8 }}>
+    <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} style={{ width: '100%', background: '#FFFFFF', border: '1px solid #E0E0E0', borderRadius: 8 }}>
       <g transform={`translate(${M.left},${M.top})`}>
         {BANDS.map(({ name, lo, hi, color }) => (
           <g key={name}>
             <rect x={lo * iW} y={0} width={(hi - lo) * iW} height={iH} fill={color} />
-            <text x={((lo + hi) / 2) * iW} y={8} textAnchor="middle" fontSize={7} fill="rgba(200,220,255,0.4)" fontFamily="JetBrains Mono">{name}</text>
+            <text x={((lo + hi) / 2) * iW} y={8} textAnchor="middle" fontSize={7} fill="#888888" fontFamily="var(--font-mono)">{name}</text>
           </g>
         ))}
-        <polyline points={pts} fill="none" stroke="var(--accent)" strokeWidth={1.5} />
-        <line x1={0} y1={iH} x2={iW} y2={iH} stroke="rgba(255,255,255,0.08)" />
-        <line x1={0} y1={0} x2={0} y2={iH} stroke="rgba(255,255,255,0.08)" />
-        <text x={iW / 2} y={iH + 28} textAnchor="middle" fontSize={8} fill="rgba(200,220,255,0.3)" fontFamily="JetBrains Mono">
+        <polyline points={pts} fill="none" stroke="#0E0E0E" strokeWidth={1.5} />
+        <line x1={0} y1={iH} x2={iW} y2={iH} stroke="#E0E0E0" />
+        <line x1={0} y1={0} x2={0} y2={iH} stroke="#E0E0E0" />
+        <text x={iW / 2} y={iH + 28} textAnchor="middle" fontSize={8} fill="#888888" fontFamily="var(--font-mono)">
           Frequency (normalised) — 2–50 Hz
         </text>
-        <text x={-30} y={iH / 2} textAnchor="middle" fontSize={8} fill="rgba(200,220,255,0.3)" fontFamily="JetBrains Mono"
+        <text x={-30} y={iH / 2} textAnchor="middle" fontSize={8} fill="#888888" fontFamily="var(--font-mono)"
           transform={`rotate(-90, -30, ${iH / 2})`}>PSD (a.u.)</text>
       </g>
     </svg>
@@ -57,10 +57,8 @@ function PSDChart({ data, channels }) {
 }
 
 export default function FrequencyAnalysisPage({ selectors, metadata, apiOnline, trialData }) {
-  const sentences = metadata?.sentences || {};
-
   const BANDS = ['Delta', 'Theta', 'Alpha', 'Beta', 'Gamma'];
-  const BAND_COLORS = { Delta: '#6875F5', Theta: '#5B9DF9', Alpha: '#4FD1C5', Beta: '#E2E8F0', Gamma: '#F56565' };
+  const BAND_COLORS = { Delta: '#0E0E0E', Theta: '#444444', Alpha: '#777777', Beta: '#AAAAAA', Gamma: '#CCCCCC' };
 
   // Compute approximate band powers from raw signal
   function computeBandPowers(rawData) {
@@ -81,12 +79,6 @@ export default function FrequencyAnalysisPage({ selectors, metadata, apiOnline, 
 
   return (
     <div>
-      <span className="section-marker">[03] FREQUENCY ANALYSIS</span>
-      <h1 style={{ fontSize: '1.8rem', marginBottom: 6 }}>Frequency Band Analysis</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: 32 }}>
-        Power spectral density and relative frequency band energies for the selected EEG trial.
-      </p>
-
       {!apiOnline && (
         <div className="alert-card alert-warning">
           <span>⚠️</span>
@@ -98,7 +90,7 @@ export default function FrequencyAnalysisPage({ selectors, metadata, apiOnline, 
         <div>
           {/* PSD Chart */}
           <div className="glass-card" style={{ marginBottom: 24 }}>
-            <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 12 }}>
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-light-secondary)', textTransform: 'uppercase', marginBottom: 12 }}>
               Power Spectral Density (Welch Method)
             </p>
             <PSDChart data={trialData.raw_signal} channels={trialData.channels} />
@@ -107,14 +99,14 @@ export default function FrequencyAnalysisPage({ selectors, metadata, apiOnline, 
           {/* Band Powers */}
           <div className="grid-2col">
             <div className="glass-card">
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 16 }}>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-light-secondary)', textTransform: 'uppercase', marginBottom: 16 }}>
                 Relative Band Power
               </p>
               {BANDS.map(band => (
                 <div key={band} style={{ marginBottom: 14 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, color: 'var(--text-light)' }}>{band}</span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: BAND_COLORS[band] }}>
+                    <span style={{ fontSize: 13, color: 'var(--text-light-primary)' }}>{band}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: BAND_COLORS[band], fontWeight: 'bold' }}>
                       {((bandPowers[band] || 0) * 100).toFixed(1)}%
                     </span>
                   </div>
@@ -126,7 +118,7 @@ export default function FrequencyAnalysisPage({ selectors, metadata, apiOnline, 
             </div>
 
             <div className="glass-card">
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 16 }}>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-light-secondary)', textTransform: 'uppercase', marginBottom: 16 }}>
                 EEG Band Reference
               </p>
               {[
@@ -139,9 +131,9 @@ export default function FrequencyAnalysisPage({ selectors, metadata, apiOnline, 
                 <div key={name} style={{ display: 'flex', gap: 12, marginBottom: 12, alignItems: 'flex-start' }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: BAND_COLORS[name], flexShrink: 0, marginTop: 4 }} />
                   <div>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-white)' }}>{name} </span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)' }}>{range}</span>
-                    <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{role}</p>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-light-primary)' }}>{name} </span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-light-secondary)' }}>{range}</span>
+                    <p style={{ fontSize: 12, color: 'var(--text-light-secondary)', marginTop: 2 }}>{role}</p>
                   </div>
                 </div>
               ))}
@@ -151,7 +143,7 @@ export default function FrequencyAnalysisPage({ selectors, metadata, apiOnline, 
       ) : (
         apiOnline && (
           <div className="glass-card" style={{ textAlign: 'center', padding: 40 }}>
-            <p style={{ color: 'var(--text-muted)' }}>Navigate to Dataset Explorer first to load trial data.</p>
+            <p style={{ color: 'var(--text-light-secondary)' }}>Navigate to Dataset Explorer first to load trial data.</p>
           </div>
         )
       )}

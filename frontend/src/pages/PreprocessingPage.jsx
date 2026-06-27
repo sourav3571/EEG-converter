@@ -28,14 +28,8 @@ export default function PreprocessingPage({ selectors, metadata, apiOnline }) {
 
   return (
     <div>
-      <span className="section-marker">[03] SIGNAL PREPROCESSING</span>
-      <h1 style={{ fontSize: '1.8rem', marginBottom: 6 }}>EEG Preprocessing Pipeline</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: 32 }}>
-        A 5-stage preprocessing pipeline transforms raw EEG trials into clean, model-ready signal tensors.
-      </p>
-
       {!apiOnline && (
-        <div className="alert-card alert-warning">
+        <div className="alert-card alert-warning" style={{ color: 'var(--text-light-primary)', borderColor: '#E0E0E0', backgroundColor: '#F8F8F8' }}>
           <span>⚠️</span>
           <div className="alert-message">
             <strong>Dataset Offline</strong> — preprocessing cannot run without the BIDS EEG dataset.
@@ -45,28 +39,30 @@ export default function PreprocessingPage({ selectors, metadata, apiOnline }) {
 
       {/* Pipeline Steps */}
       <div className="glass-card" style={{ marginBottom: 24 }}>
-        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 16 }}>
-          Preprocessing Pipeline
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-light-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
+          Preprocessing Pipeline Stages
         </p>
-        {PIPELINE_STEPS.map(({ num, title, desc }) => (
-          <div key={num} className="step-card">
-            <div className="step-num">{num}</div>
-            <div>
-              <div style={{ fontWeight: 600, color: 'var(--text-white)', marginBottom: 4 }}>{title}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6 }}>{desc}</div>
+        <div>
+          {PIPELINE_STEPS.map(({ num, title, desc }) => (
+            <div key={num} className="step-card" style={{ display: 'flex', gap: 16, padding: '16px 0', borderBottom: '1px solid var(--border-light)' }}>
+              <div className="step-num" style={{ fontFamily: 'var(--font-mono)', fontSize: 14, fontWeight: 'bold', color: 'var(--text-light-primary)', width: 32 }}>{num}</div>
+              <div>
+                <div style={{ fontWeight: 600, color: 'var(--text-light-primary)', marginBottom: 4 }}>{title}</div>
+                <div style={{ fontSize: 13, color: 'var(--text-light-secondary)', lineHeight: 1.6 }}>{desc}</div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {loading && (
         <div className="glass-card" style={{ textAlign: 'center', padding: 40 }}>
-          <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Running preprocessing pipeline…</div>
+          <div style={{ fontSize: 13, color: 'var(--text-light-secondary)' }}>Running preprocessing pipeline…</div>
         </div>
       )}
 
       {error && (
-        <div className="alert-card alert-error">
+        <div className="alert-card alert-error" style={{ borderColor: 'red' }}>
           <span>❌</span>
           <div className="alert-message"><strong>Error:</strong> {error}</div>
         </div>
@@ -88,20 +84,19 @@ export default function PreprocessingPage({ selectors, metadata, apiOnline }) {
               data={trialData.clean_signal || trialData.raw_signal}
               channels={trialData.channels}
               title="⑤ Clean EEG (Post-Processing)"
-              color="var(--success)"
             />
           </div>
 
           {/* Stats */}
           {trialData.preprocessing_stats && (
             <div className="glass-card" style={{ gridColumn: '1 / -1' }}>
-              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 16 }}>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-light-secondary)', textTransform: 'uppercase', marginBottom: 16 }}>
                 Processing Statistics
               </p>
               <div className="stat-grid">
                 {Object.entries(trialData.preprocessing_stats).map(([k, v]) => (
                   <div key={k} className="stat-item stat-item-accent">
-                    <div className="stat-value" style={{ fontSize: '1.1rem' }}>{typeof v === 'number' ? v.toFixed(4) : String(v)}</div>
+                    <div className="stat-value" style={{ fontSize: '1.2rem' }}>{typeof v === 'number' ? v.toFixed(4) : String(v)}</div>
                     <div className="stat-label">{k.replace(/_/g, ' ')}</div>
                   </div>
                 ))}

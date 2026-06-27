@@ -10,9 +10,9 @@ const CHANNEL_POSITIONS = {
 
 function lerp(a, b, t) { return a + (b - a) * t; }
 function amplitudeToColor(norm) {
-  // Blue → Cyan → Green → Yellow → Red
+  // Clean monochrome scale: Light grey to dark slate/black
   const stops = [
-    [0, 0, 255], [0, 255, 255], [0, 255, 0], [255, 255, 0], [255, 0, 0]
+    [240, 240, 240], [200, 200, 200], [150, 150, 150], [80, 80, 80], [14, 14, 14]
   ];
   const t = Math.max(0, Math.min(1, norm)) * (stops.length - 1);
   const i = Math.floor(t);
@@ -32,23 +32,24 @@ function TopoMap({ amplitudes, channels }) {
   const mx = Math.max(...vals) || 1;
 
   return (
-    <svg viewBox="0 0 100 100" style={{ width: '100%', maxWidth: 420, display: 'block', margin: '0 auto' }}>
+    <svg viewBox="0 0 100 100" style={{ width: '100%', maxWidth: 420, display: 'block', margin: '0 auto', background: '#FFFFFF' }}>
       {/* Head circle */}
-      <circle cx={50} cy={50} r={42} fill="#19191B" stroke="var(--border-default)" strokeWidth={1} />
+      <circle cx={50} cy={50} r={42} fill="#FFFFFF" stroke="#E0E0E0" strokeWidth={1} />
       {/* Nose */}
-      <path d="M 46 10 Q 50 5 54 10" fill="none" stroke="var(--border-default)" strokeWidth={0.8} />
+      <path d="M 46 10 Q 50 5 54 10" fill="none" stroke="#E0E0E0" strokeWidth={0.8} />
       {/* Electrode bubbles */}
       {channels.map((ch, i) => {
         const pos = CHANNEL_POSITIONS[ch];
         if (!pos) return null;
         const norm = (vals[i] - mn) / (mx - mn);
         const color = amplitudeToColor(norm);
+        // Determine text color based on bubble brightness
+        const textColor = norm > 0.6 ? '#FFFFFF' : '#000000';
         return (
           <g key={ch}>
-            <circle cx={pos.x} cy={pos.y} r={5.5} fill={color} opacity={0.82}
-              style={{ filter: `drop-shadow(0 0 4px ${color})` }} />
+            <circle cx={pos.x} cy={pos.y} r={5.5} fill={color} stroke="#E0E0E0" strokeWidth={0.5} opacity={0.9} />
             <text x={pos.x} y={pos.y + 1} textAnchor="middle" dominantBaseline="middle"
-              fontSize={2.2} fill="#FFF" fontFamily="JetBrains Mono, monospace"
+              fontSize={2.2} fill={textColor} fontFamily="var(--font-mono)" fontWeight="bold"
               style={{ userSelect: 'none' }}>{ch}</text>
           </g>
         );
@@ -56,32 +57,23 @@ function TopoMap({ amplitudes, channels }) {
       {/* Colourbar legend */}
       <defs>
         <linearGradient id="cb" x1="0" x2="1">
-          <stop offset="0%" stopColor="blue" />
-          <stop offset="25%" stopColor="cyan" />
-          <stop offset="50%" stopColor="lime" />
-          <stop offset="75%" stopColor="yellow" />
-          <stop offset="100%" stopColor="red" />
+          <stop offset="0%" stopColor="#F0F0F0" />
+          <stop offset="100%" stopColor="#0E0E0E" />
         </linearGradient>
       </defs>
       <rect x={10} y={92} width={80} height={4} fill="url(#cb)" rx={2} />
-      <text x={10} y={99} fontSize={2.5} fill="rgba(200,220,255,0.5)" fontFamily="JetBrains Mono">MIN</text>
-      <text x={88} y={99} fontSize={2.5} fill="rgba(200,220,255,0.5)" fontFamily="JetBrains Mono" textAnchor="end">MAX</text>
+      <text x={10} y={99} fontSize={2.5} fill="#888888" fontFamily="var(--font-mono)">MIN (μV)</text>
+      <text x={88} y={99} fontSize={2.5} fill="#888888" fontFamily="var(--font-mono)" textAnchor="end">MAX (μV)</text>
     </svg>
   );
 }
 
 export default function BrainTopographyPage({ selectors, metadata, apiOnline, trialData }) {
   const sentences = metadata?.sentences || {};
-  const conditionName = metadata?.conditions?.[selectors.condition] || '';
+  const conditionName = Object.values(metadata?.conditions || {})[selectors.condition] || '';
 
   return (
     <div>
-      <span className="section-marker">[04] BRAIN TOPOGRAPHY</span>
-      <h1 style={{ fontSize: '1.8rem', marginBottom: 6 }}>Scalp Voltage Distribution</h1>
-      <p style={{ color: 'var(--text-muted)', marginBottom: 32 }}>
-        2D topographic map of mean channel amplitude across the selected trial epoch.
-      </p>
-
       {!apiOnline && (
         <div className="alert-card alert-warning">
           <span>⚠️</span>
@@ -93,7 +85,7 @@ export default function BrainTopographyPage({ selectors, metadata, apiOnline, tr
         <div className="grid-2col">
           <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 32 }}>
             <TopoMap amplitudes={trialData.raw_signal} channels={trialData.channels} />
-            <div style={{ marginTop: 16, fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-muted)', textAlign: 'center', lineHeight: 1.8 }}>
+            <div style={{ marginTop: 16, fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-light-secondary)', textAlign: 'center', lineHeight: 1.8 }}>
               Subject {selectors.subject} · {conditionName} · Trial #{Number(selectors.trialIdx) + 1}<br />
               Stimulus: &ldquo;{sentences[selectors.stimulusIdx]}&rdquo;
             </div>
@@ -101,7 +93,7 @@ export default function BrainTopographyPage({ selectors, metadata, apiOnline, tr
 
           {/* Channel amplitude table */}
           <div className="glass-card">
-            <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 14 }}>
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-light-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 14 }}>
               Channel Mean Amplitudes
             </p>
             <div className="saliency-list">
@@ -109,9 +101,9 @@ export default function BrainTopographyPage({ selectors, metadata, apiOnline, tr
                 const arr = trialData.raw_signal?.[i] || [];
                 const mean = arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length).toFixed(4) : '—';
                 return (
-                  <div key={ch} className="saliency-row">
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--accent)' }}>{ch}</span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-light)' }}>{mean} μV</span>
+                  <div key={ch} className="saliency-row" style={{ backgroundColor: '#FFFFFF', border: '1px solid #E0E0E0' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-light-primary)', fontWeight: 'bold' }}>{ch}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-light-secondary)' }}>{mean} μV</span>
                   </div>
                 );
               })}
@@ -121,7 +113,7 @@ export default function BrainTopographyPage({ selectors, metadata, apiOnline, tr
       ) : (
         apiOnline && (
           <div className="glass-card" style={{ textAlign: 'center', padding: 40 }}>
-            <p style={{ color: 'var(--text-muted)' }}>Navigate to Dataset Explorer first to load trial data.</p>
+            <p style={{ color: 'var(--text-light-secondary)' }}>Navigate to Dataset Explorer first to load trial data.</p>
           </div>
         )
       )}
