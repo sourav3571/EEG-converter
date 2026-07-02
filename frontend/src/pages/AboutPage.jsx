@@ -3,7 +3,7 @@ export default function AboutPage() {
     {
       tag: '[01] OVERVIEW',
       title: 'Project Synopsis',
-      body: `This project implements a Brain-Computer Interface (BCI) for decoding imagined Spanish speech from left-hemisphere EEG signals. Using the publicly available ds004279 dataset (OpenNeuro BIDS format), we demonstrate that a compact EEGNet architecture can classify 30 distinct imagined Spanish sentences with 82.4% accuracy — 79.1 percentage points above chance.`,
+      body: `This project implements a Brain-Computer Interface (BCI) for decoding imagined Spanish speech from left-hemisphere EEG signals. Using the publicly available ds004279 dataset (OpenNeuro BIDS format), we demonstrate that a compact EEGNet architecture can classify 2-class imagined Spanish sentences with 82.4% accuracy — a 32.4% margin above the 50% chance baseline for binary classification.`,
     },
     {
       tag: '[02] DATASET',

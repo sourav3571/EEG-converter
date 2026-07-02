@@ -2,7 +2,7 @@ import { Brain, Zap, Users, Radio, Waves } from 'lucide-react';
 
 const STATS = [
   { value: '82.4%', label: 'Decoder Accuracy' },
-  { value: '+79.1%', label: 'Above Chance' },
+  { value: '+32.4%', label: 'Above Chance' },
   { value: '56', label: 'Cohort Subjects' },
   { value: '14', label: 'LH Channels' },
 ];
@@ -114,7 +114,7 @@ export default function HomePage({ setActivePage }) {
       {/* Feature Cards */}
       <div className="grid-3col">
         {[
-          { icon: Waves, title: 'Live BIDS Dataset', desc: 'ds004279 OpenNeuro — 56 subjects, 30 Spanish sentences, spoken and imagined conditions.', page: 'explorer' },
+          { icon: Waves, title: 'Live BIDS Dataset', desc: 'ds004279 OpenNeuro — 56 subjects, auditory perception and imagined speech conditions.', page: 'explorer' },
           { icon: Zap, title: 'EEGNet Decoder', desc: 'PyTorch EEGNet trained per-subject on 14 left-hemisphere language-lateralized channels.', page: 'prediction' },
           { icon: Radio, title: 'Zero-Shot Retrieval', desc: 'Multilingual SentenceTransformer cosine similarity — decode any candidate phrase.', page: 'prediction' },
         ].map(({ icon: Icon, title, desc, page }) => (

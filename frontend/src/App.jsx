@@ -273,19 +273,19 @@ export default function App() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px' }}>
             <div className="light-card">
               <span className="stat-number">82.4%</span>
-              <span className="stat-desc">Mean Decoder Accuracy across subjects under 5-fold cross-validation.</span>
+              <span className="stat-desc">Mean decoder accuracy for 2-class sentence classification under 5-fold subject-dependent cross-validation.</span>
             </div>
             <div className="light-card">
-              <span className="stat-number">+79.1%</span>
-              <span className="stat-desc">Decoder accuracy margin achieved above chance levels.</span>
+              <span className="stat-number">+32.4%</span>
+              <span className="stat-desc">Accuracy margin above the 50% chance baseline for binary classification.</span>
             </div>
             <div className="light-card">
               <span className="stat-number">56</span>
-              <span className="stat-desc">Cohort subjects tested under auditory and imagined stimuli conditions.</span>
+              <span className="stat-desc">Participants from the ds004279 dataset, tested under auditory perception and imagined speech conditions.</span>
             </div>
             <div className="light-card">
               <span className="stat-number">14</span>
-              <span className="stat-desc">Language-lateralized left-hemisphere channels extracted for feature vectors.</span>
+              <span className="stat-desc">Language-lateralized left-hemisphere channels selected for feature extraction.</span>
             </div>
           </div>
         </div>
