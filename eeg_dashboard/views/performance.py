@@ -28,7 +28,7 @@ def render():
         st.markdown("### 📉 Model Training History")
         
         # Load training curves
-        df_history, best_epoch = model_loader.get_training_history()
+        df_history, best_epoch = model_loader.get_illustrative_training_curves()
         
         # Plot curves
         fig_curve = go.Figure()
@@ -75,7 +75,7 @@ def render():
         st.markdown("### 🧿 Error Analysis (Confusion Matrix)")
         norm_toggle = st.checkbox("Normalize Matrix (Show Class Accuracies %)", value=True)
         
-        cm_data = model_loader.get_confusion_matrix_data()
+        cm_data = model_loader.get_illustrative_confusion_matrix()
         fig_cm = confusion_matrix.plot_confusion_matrix(cm_data, normalize=norm_toggle)
         st.plotly_chart(fig_cm, use_container_width=True)
         

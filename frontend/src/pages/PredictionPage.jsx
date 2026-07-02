@@ -109,22 +109,22 @@ export default function PredictionPage({ selectors, metadata, apiOnline }) {
         trial_idx: selectors.trialIdx,
         average_all_trials: averageAllTrials,
       });
-      
+
       const isCorrect = Math.random() < 0.7;
       res.is_correct = isCorrect;
       if (isCorrect) {
-          res.confidence = 0.6 + Math.random() * 0.32;
+        res.confidence = 0.6 + Math.random() * 0.32;
       } else {
-          res.confidence = 0.3 + Math.random() * 0.35;
-          const otherIds = Object.keys(sentences).filter(k => Number(k) !== selectors.stimulusIdx);
-          if (otherIds.length > 0) {
-              res.predicted_sentence = sentences[otherIds[Math.floor(Math.random() * otherIds.length)]];
-          }
+        res.confidence = 0.3 + Math.random() * 0.35;
+        const otherIds = Object.keys(sentences).filter(k => Number(k) !== selectors.stimulusIdx);
+        if (otherIds.length > 0) {
+          res.predicted_sentence = sentences[otherIds[Math.floor(Math.random() * otherIds.length)]];
+        }
       }
       if (res.top_predictions && res.top_predictions.length > 0) {
-          res.top_predictions[0].confidence = res.confidence;
+        res.top_predictions[0].confidence = res.confidence;
       }
-      
+
       setResult(res);
     } catch (e) {
       setError(e.message);
@@ -165,10 +165,10 @@ export default function PredictionPage({ selectors, metadata, apiOnline }) {
 
       {/* Trial Averaging Option */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, background: 'rgba(255,255,255,0.01)', padding: '14px 18px', borderRadius: 8, border: '1px solid #222' }}>
-        <input 
-          type="checkbox" 
-          id="averageAllTrials" 
-          checked={averageAllTrials} 
+        <input
+          type="checkbox"
+          id="averageAllTrials"
+          checked={averageAllTrials}
           onChange={e => setAverageAllTrials(e.target.checked)}
           style={{ cursor: 'pointer', width: 16, height: 16, accentColor: 'var(--accent)' }}
         />
@@ -182,9 +182,9 @@ export default function PredictionPage({ selectors, metadata, apiOnline }) {
         {[
           { id: 'eeg', label: 'EEG Session Inference' },
         ].map(t => (
-          <button 
-            key={t.id} 
-            className={`tab-btn ${tab === t.id ? 'active' : ''}`} 
+          <button
+            key={t.id}
+            className={`tab-btn ${tab === t.id ? 'active' : ''}`}
             onClick={() => setTab(t.id)}
             style={{ color: tab === t.id ? '#FFF' : '#A0A0A0', backgroundColor: tab === t.id ? '#161616' : 'transparent' }}
           >

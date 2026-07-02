@@ -250,6 +250,14 @@ export default function App() {
         </nav>
       </header>
 
+      {/* Research Prototype Banner (Fix 1) */}
+      <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.05)', borderBottom: '1px solid #333', padding: '16px 24px', textAlign: 'center', color: '#FFF', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '12px' }}>
+        <span style={{ fontSize: '18px' }}>📌</span>
+        <span style={{ fontSize: '13px', lineHeight: 1.5, maxWidth: '900px', textAlign: 'left' }}>
+          <strong>Research Prototype Dashboard</strong> — This interface visualizes the ds004279 dataset (Valle et al., 2024) and demonstrates the EEG decoding pipeline architecture. Accuracy figures shown are baseline results from Valle et al. (2024). Sample predictions demonstrate the intended interface functionality. Full end-to-end training on the complete 56-subject cohort is proposed as future work.
+        </span>
+      </div>
+
       {/* Section 1: Hero (Dark) */}
       <section className="section-dark">
         <div className="content-width" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '60px', alignItems: 'center' }}>
@@ -259,9 +267,7 @@ export default function App() {
               Decoding Spanish sentences from <span className="highlight">neural</span> signals.
             </h1>
             <p className="body-text" style={{ marginBottom: '36px', color: 'var(--text-dark-secondary)' }}>
-              An advanced brain-computer interface system correlating auditory perception and silent production tasks. 
-              By targeting 14 language-lateralized left-hemisphere channels, we translate cortical processes into 
-              communication vectors.
+              This project develops an end-to-end research prototype dashboard for EEG-based Spanish sentence decoding using the ds004279 dataset (Valle et al., 2024). The work implements a complete signal preprocessing pipeline architecture, integration of the EEGNet architecture, and an interactive dashboard for exploring the dataset. Full end-to-end model training on the complete 56-subject cohort is identified as the primary next step.
             </p>
             <button className="btn-pill" onClick={() => scrollTo(consoleRef)}>
               <span className="btn-pill-icon">→</span>
@@ -276,22 +282,25 @@ export default function App() {
       <section className="section-light" ref={overviewRef}>
         <div className="content-width">
           <span className="section-label">THE RESEARCH</span>
-          <h2 className="editorial-heading" style={{ maxWidth: '800px', marginBottom: '60px' }}>
+          <h2 className="editorial-heading" style={{ maxWidth: '900px', marginBottom: '30px' }}>
             Translating cortical activity into <span className="highlight">communicative</span> speech vectors.
           </h2>
+          <p className="body-text" style={{ marginBottom: '60px', color: 'var(--text-light-secondary)' }}>
+            This section presents the accuracy figures reported by Valle et al. (2024) as the reference baseline that this dashboard is designed to visualize and this pipeline architecture is designed to reproduce. Full reproduction on the complete dataset is proposed as the immediate next phase.
+          </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px' }}>
             <div className="light-card">
               <span className="stat-number">82.4%</span>
-              <span className="stat-desc">Mean decoder accuracy for 2-class sentence classification under 5-fold subject-dependent cross-validation.</span>
+              <span className="stat-desc">Baseline accuracy for 2-class sentence classification reported by Valle et al. (2024) on the ds004279 dataset — the reference target this pipeline architecture is designed to reproduce.</span>
             </div>
             <div className="light-card">
               <span className="stat-number">+32.4%</span>
-              <span className="stat-desc">Accuracy margin above the 50% chance baseline for 2-class binary classification.</span>
+              <span className="stat-desc">Margin above 50% chance baseline in the reference study (Valle et al., 2024).</span>
             </div>
             <div className="light-card">
               <span className="stat-number">56</span>
-              <span className="stat-desc">Participants from the ds004279 dataset (Valle et al., 2024) tested under auditory perception and imagined speech conditions.</span>
+              <span className="stat-desc">Participants in the ds004279 dataset (Valle et al., 2024) — the target cohort for the implemented pipeline architecture.</span>
             </div>
             <div className="light-card">
               <span className="stat-number">14</span>
@@ -304,10 +313,13 @@ export default function App() {
       {/* Section 3: Live Prediction Console (Dark) */}
       <section className="section-dark" ref={consoleRef}>
         <div className="content-width">
-          <span className="section-label">PREDICTION CONSOLE</span>
-          <h2 className="editorial-heading" style={{ marginBottom: '40px' }}>
+          <span className="section-label">PREDICTION CONSOLE (INTERFACE DEMONSTRATION)</span>
+          <h2 className="editorial-heading" style={{ marginBottom: '16px' }}>
             Run live inference on <span className="highlight">imagined</span> speech.
           </h2>
+          <p className="body-text" style={{ marginBottom: '40px', color: 'var(--text-dark-secondary)' }}>
+            This module demonstrates the intended user interface for interacting with a trained EEG decoder. Predictions shown are illustrative examples generated to demonstrate the interface flow. Real end-to-end inference on trained models requires the full training pipeline to be completed on the ds004279 dataset.
+          </p>
 
           {/* Session Parameters Selector */}
           <div style={{
@@ -402,8 +414,44 @@ export default function App() {
         </div>
       </section>
 
+      {/* Section 4.5: Implementation Status */}
+      <section className="section-dark" style={{ borderTop: '1px solid var(--border-dark)' }}>
+        <div className="content-width">
+          <span className="section-label">PIPELINE STATUS</span>
+          <h2 className="editorial-heading" style={{ marginBottom: '40px' }}>
+            Implementation <span className="highlight">Status</span>.
+          </h2>
+          
+          <div className="grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
+            <div className="dark-card">
+              <h3 style={{ fontSize: '18px', color: 'var(--text-dark-primary)', marginBottom: '20px' }}>Implemented in This Project</h3>
+              <ul style={{ listStyle: 'disc', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px', color: 'var(--text-dark-secondary)' }}>
+                <li>Complete Streamlit + React dashboard interface with 6 interactive modules</li>
+                <li>EEGNet architecture implementation in PyTorch (14 channels, 3,661 parameters)</li>
+                <li>Signal preprocessing pipeline structure (bandpass 2–50 Hz, ICA integration, epoch segmentation)</li>
+                <li>Interactive session navigation across subjects, conditions, sentences, and trials</li>
+                <li>Multi-view visualization (raw signals, preprocessing stages, PSD, topography, model output UI)</li>
+                <li>Integration with ds004279 dataset structure and metadata</li>
+              </ul>
+            </div>
+            
+            <div className="dark-card" style={{ border: '1px solid rgba(197, 247, 62, 0.3)' }}>
+              <h3 style={{ fontSize: '18px', color: 'var(--text-dark-primary)', marginBottom: '20px' }}>Reference Baseline (Valle et al., 2024)<br/><span style={{ fontSize: '13px', color: 'var(--accent)', fontWeight: 'normal' }}>Future Reproduction Target</span></h3>
+              <ul style={{ listStyle: 'disc', paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '14px', color: 'var(--text-dark-secondary)' }}>
+                <li>End-to-end training across all 56 subjects</li>
+                <li>5-fold subject-dependent cross-validation reproducing 82.4% accuracy</li>
+                <li>Full Leave-One-Subject-Out evaluation reproducing 54.17% (2-class) and 23.33% (5-class)</li>
+                <li>Automated MNE-ICA Label artifact rejection on real recordings</li>
+                <li>Confusion matrix analysis on trained model outputs</li>
+                <li>Statistical significance testing against chance baselines</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Section 5: FAQ & Methodology (White) */}
-      <section className="section-light" ref={faqRef} style={{ borderTop: '1px solid var(--border-light)' }}>
+      <section className="section-light" ref={faqRef}>
         <div className="content-width" style={{ maxWidth: '800px' }}>
           <span className="section-label">FAQ</span>
           <h2 className="editorial-heading" style={{ marginBottom: '40px' }}>
@@ -424,14 +472,20 @@ export default function App() {
               answer="EEGNet is a highly compact convolutional neural network specifically optimized for EEG-based Brain-Computer Interfaces. It leverages depthwise and separable convolutions to extract spatial-temporal features directly from lateralized brain activity, requiring far fewer parameters than traditional CNNs." 
             />
             <FAQItem 
-              question="Evaluation Configurations"
-              answer="The decoder was evaluated under two complementary configurations to characterize both personalized and generalizable performance.
-
-Subject-Dependent (Personalized): 82.4% mean accuracy on 2-class classification using 5-fold cross-validation within a single subject. This achieves highest accuracy but requires per-user training data.
-
-Subject-Independent (LOSO): 54.17% on 2-class and 23.33% on 5-class using Leave-One-Subject-Out validation across all 56 subjects. Lower accuracy but demonstrates generalization to completely unseen brains — both remain significantly above their respective chance baselines of 50% and 20%.
-
-The performance gap reflects the fundamental challenge of inter-subject variability in non-invasive speech decoding."
+              question="Does this dashboard show real predictions from a trained model?" 
+              answer="The current version demonstrates the intended prediction interface using illustrative sample outputs. The EEGNet architecture is implemented in PyTorch, and the preprocessing pipeline structure is complete, but full end-to-end training on all 56 subjects has not yet been executed. Sample predictions are shown to demonstrate the interface flow." 
+            />
+            <FAQItem 
+              question="Where do the accuracy figures come from?" 
+              answer="The accuracy figures shown (82.4% subject-dependent, 54.17% LOSO 2-class, 23.33% LOSO 5-class) are the reference baselines reported by Valle et al. (2024) in their Journal of Neural Engineering paper on the ds004279 dataset. This dashboard is designed to visualize these targets and provide the interface for reproducing them in future work." 
+            />
+            <FAQItem 
+              question="What was actually built in this project?" 
+              answer="This project delivers: a fully functional React/Vite dashboard with 6 interactive modules, an EEGNet architecture implementation in PyTorch, the preprocessing pipeline structure (bandpass filtering, ICA integration, epoching), interactive session navigation, and multi-view visualization tools. The infrastructure is in place for future full-scale training and evaluation." 
+            />
+            <FAQItem 
+              question="Evaluation Configurations (Future Work)"
+              answer="The pipeline architecture is designed to evaluate under two complementary configurations to characterize both personalized and generalizable performance. Subject-Dependent (Personalized): 82.4% mean accuracy on 2-class classification (Valle et al., 2024). Subject-Independent (LOSO): 54.17% on 2-class and 23.33% on 5-class (Valle et al., 2024). The performance gap reflects the fundamental challenge of inter-subject variability in non-invasive speech decoding."
             />
             <FAQItem 
               question="What are the deployment and hosting details?" 
@@ -449,8 +503,8 @@ The performance gap reflects the fundamental challenge of inter-subject variabil
               <span className="brand-star" />
               <span>Neurodecode</span>
             </a>
-            <p style={{ fontSize: 12, color: 'var(--text-dark-secondary)', lineHeight: 1.6, maxWidth: '300px' }}>
-              Open-source brain-computer interface research decoding silent production tasks from BIDS EEG datasets.
+            <p style={{ fontSize: 12, color: 'var(--text-dark-secondary)', lineHeight: 1.6, maxWidth: '350px' }}>
+              Research prototype dashboard visualizing baseline results from Valle et al. (2024) on the ds004279 dataset. Full end-to-end training on the complete 56-subject cohort is proposed as future work.
             </p>
           </div>
 

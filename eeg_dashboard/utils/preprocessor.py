@@ -1,3 +1,5 @@
+# NOTE: This module contains illustrative preprocessing simulations for dashboard demonstration purposes. 
+# Real MNE-ICA Label artifact rejection on ds004279 recordings requires the full training pipeline execution.
 import numpy as np
 from scipy import signal
 from config import settings
@@ -24,10 +26,10 @@ def common_average_reference(data):
     car_data = data - mean_signal
     return car_data
 
-def remove_simulated_artifacts(raw_data, seed=42):
+def demo_artifact_simulation(raw_data, seed=42):
     """
-    Simulates the application of ICA by removing EOG (blink) and high-frequency EMG (muscle)
-    components. Re-creates clean brain signals.
+    Illustrative artifact simulation for dashboard demonstration. 
+    NOT equivalent to real Infomax ICA + MNE-ICA Label rejection which is proposed for the full training implementation.
     """
     np.random.seed(seed)
     n_channels, n_samples = raw_data.shape
@@ -77,7 +79,7 @@ def run_preprocessing_pipeline(raw_data, lowcut=2.0, highcut=50.0, fs=250.0, ord
     filtered = bandpass_filter(raw_data, lowcut, highcut, fs, order)
     
     # 2. Artifact Removal (ICA)
-    ica_cleaned = remove_simulated_artifacts(filtered, seed=seed)
+    ica_cleaned = demo_artifact_simulation(filtered, seed=seed)
     
     # 3. Re-reference (CAR)
     car_referenced = common_average_reference(ica_cleaned)

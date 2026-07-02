@@ -280,7 +280,7 @@ def predict_trial(eeg_data, subject, condition, true_label_idx=None, seed=42):
         predicted_idx = int(top_indices[0])
         confidence = float(probabilities[predicted_idx])
         
-        # Saliency maps (simulated based on channel/time domains for viz)
+        # Saliency values are illustrative for interface demonstration. Real gradient-weighted saliency requires trained model backpropagation which is proposed for the full pipeline implementation.
         np.random.seed(seed)
         time_saliency = np.zeros(750)
         time_saliency[125:500] = np.random.uniform(0.6, 1.0, 375)
@@ -329,10 +329,9 @@ def predict_trial(eeg_data, subject, condition, true_label_idx=None, seed=42):
 
 
 @st.cache_data
-def get_training_history(epochs=80):
+def get_illustrative_training_curves(epochs=80):
     """
-    Attempts to load the real model training history from CSV, or
-    generates realistic, scientifically accurate simulated histories.
+    Generates illustrative training curves for dashboard visualization. Real training histories require actual end-to-end training on the ds004279 dataset which is proposed as future work.
     """
     _model_base = _get_model_base()
     _results_base = os.path.join(os.path.dirname(_model_base), "results")
@@ -391,9 +390,9 @@ def get_model_comparison():
 
 
 @st.cache_data
-def get_confusion_matrix_data():
+def get_illustrative_confusion_matrix():
     """
-    Generates a realistic 30x30 confusion matrix for Spanish sentences.
+    Illustrative confusion matrix for interface demonstration. Real confusion analysis requires trained model evaluation which is proposed as future work.
     """
     n = 30
     cm = np.zeros((n, n))
@@ -496,7 +495,7 @@ def predict_contrastive_trial(eeg_data, subject, condition, true_label_idx=None,
                     "similarity": float(similarity)
                 })
             custom_results = sorted(custom_results, key=lambda x: x["similarity"], reverse=True)
-            
+    # Saliency values are illustrative for interface demonstration. Real gradient-weighted saliency requires trained model backpropagation which is proposed for the full pipeline implementation.
     np.random.seed(seed)
     time_saliency = np.zeros(750)
     time_saliency[150:480] = np.random.uniform(0.6, 1.0, 330)
