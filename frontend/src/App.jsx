@@ -177,6 +177,7 @@ function FAQItem({ question, answer }) {
 }
 
 export default function App() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectors, setSelectors] = useState(DEFAULT_SELECTORS);
   const [status, setStatus] = useState(null);
   const [metadata, setMetadata] = useState(null);
@@ -232,12 +233,20 @@ export default function App() {
           <span className="brand-star" />
           <span>Neurodecode</span>
         </a>
-        <nav className="nav-links">
-          <button className="nav-link" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Overview</button>
-          <button className="nav-link" onClick={() => scrollTo(overviewRef)}>The Research</button>
-          <button className="nav-link" onClick={() => scrollTo(consoleRef)}>Prediction Console</button>
-          <button className="nav-link" onClick={() => scrollTo(analysisRef)}>Signal Analysis</button>
-          <button className="nav-link" onClick={() => scrollTo(faqRef)}>Methodology & FAQ</button>
+        
+        {/* Mobile Hamburger Button */}
+        <button className="mobile-menu-btn" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+          <span className="hamburger-line"></span>
+        </button>
+
+        <nav className={`nav-links ${isMobileMenuOpen ? 'nav-links-mobile-open' : ''}`}>
+          <button className="nav-link" onClick={() => { setIsMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Overview</button>
+          <button className="nav-link" onClick={() => { setIsMobileMenuOpen(false); scrollTo(overviewRef); }}>The Research</button>
+          <button className="nav-link" onClick={() => { setIsMobileMenuOpen(false); scrollTo(consoleRef); }}>Prediction Console</button>
+          <button className="nav-link" onClick={() => { setIsMobileMenuOpen(false); scrollTo(analysisRef); }}>Signal Analysis</button>
+          <button className="nav-link" onClick={() => { setIsMobileMenuOpen(false); scrollTo(faqRef); }}>Methodology & FAQ</button>
         </nav>
       </header>
 
@@ -278,7 +287,7 @@ export default function App() {
             </div>
             <div className="light-card">
               <span className="stat-number">+32.4%</span>
-              <span className="stat-desc">Accuracy margin above the 50% chance baseline for binary classification.</span>
+              <span className="stat-desc">Accuracy margin above the 50% chance baseline for 2-class binary classification.</span>
             </div>
             <div className="light-card">
               <span className="stat-number">56</span>
@@ -415,8 +424,14 @@ export default function App() {
               answer="EEGNet is a highly compact convolutional neural network specifically optimized for EEG-based Brain-Computer Interfaces. It leverages depthwise and separable convolutions to extract spatial-temporal features directly from lateralized brain activity, requiring far fewer parameters than traditional CNNs." 
             />
             <FAQItem 
-              question="How does the zero-shot multilingual retrieval work?" 
-              answer="We train a projection layer contrastively to map high-dimensional EEG embeddings directly into a 384-dimensional multilingual SentenceTransformer embedding space. This allows the system to compare the EEG representation with arbitrary custom sentences based on cosine similarity, facilitating zero-shot decoding." 
+              question="Evaluation Configurations"
+              answer="The decoder was evaluated under two complementary configurations to characterize both personalized and generalizable performance.
+
+Subject-Dependent (Personalized): 82.4% mean accuracy on 2-class classification using 5-fold cross-validation within a single subject. This achieves highest accuracy but requires per-user training data.
+
+Subject-Independent (LOSO): 54.17% on 2-class and 23.33% on 5-class using Leave-One-Subject-Out validation across all 56 subjects. Lower accuracy but demonstrates generalization to completely unseen brains — both remain significantly above their respective chance baselines of 50% and 20%.
+
+The performance gap reflects the fundamental challenge of inter-subject variability in non-invasive speech decoding."
             />
             <FAQItem 
               question="What are the deployment and hosting details?" 

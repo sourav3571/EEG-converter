@@ -605,3 +605,88 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
+
+/* Mobile Hamburger Menu */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.hamburger-line {
+  width: 24px;
+  height: 2px;
+  background-color: var(--text-dark-primary);
+  border-radius: 2px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 768px) {
+  .top-header {
+    padding: 16px;
+  }
+  
+  .mobile-menu-btn {
+    display: flex;
+  }
+  
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: var(--bg-dark);
+    padding: 16px;
+    border-bottom: 1px solid var(--border-dark);
+  }
+  
+  .nav-links-mobile-open {
+    display: flex !important;
+  }
+  
+  .section-dark, .section-light {
+    padding: 40px 16px;
+  }
+  
+  .content-width {
+    max-width: 100vw;
+  }
+  
+  .editorial-heading {
+    font-size: 24px !important;
+  }
+  
+  h2 {
+    font-size: 20px !important;
+  }
+  
+  h3 {
+    font-size: 16px !important;
+  }
+  
+  .tab-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 12px;
+  }
+  
+  .tab-btn, .btn-pill, .select-custom, .faq-question {
+    min-height: 44px;
+  }
+  
+  .grid-2col, .grid-3col {
+    grid-template-columns: 1fr;
+  }
+  
+  .content-width[style*="display: grid"] {
+    display: flex !important;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+}

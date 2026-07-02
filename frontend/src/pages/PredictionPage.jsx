@@ -91,13 +91,9 @@ function SaliencyMap({ channelSaliency }) {
 export default function PredictionPage({ selectors, metadata, apiOnline }) {
   const [tab, setTab] = useState('eeg');
   const [result, setResult] = useState(null);
-  const [zsResult, setZsResult] = useState(null);
   const [error, setError] = useState(null);
-  const [customSentences, setCustomSentences] = useState('');
   const [averageAllTrials, setAverageAllTrials] = useState(true);
-
   const stdRunner = useDecodeRunner(PHASES_STANDARD);
-  const zsRunner = useDecodeRunner(PHASES_ZERO);
 
   const sentences = metadata?.sentences || {};
   const conditionName = Object.values(metadata?.conditions || {})[selectors.condition] || '';
@@ -135,24 +131,7 @@ export default function PredictionPage({ selectors, metadata, apiOnline }) {
     }
   }
 
-  async function runZeroShot() {
-    setError(null);
-    await zsRunner.runAnimation();
-    try {
-      const custom = customSentences.split('\n').map(s => s.trim()).filter(Boolean);
-      const res = await api.decodeZeroShot({
-        subject: selectors.subject,
-        condition: selectors.condition,
-        stimulus_idx: selectors.stimulusIdx,
-        trial_idx: selectors.trialIdx,
-        custom_sentences: custom,
-        average_all_trials: averageAllTrials,
-      });
-      setZsResult(res);
-    } catch (e) {
-      setError(e.message);
-    }
-  }
+
 
   return (
     <div>
@@ -285,69 +264,7 @@ export default function PredictionPage({ selectors, metadata, apiOnline }) {
         </div>
       )}
 
-      {/* ── ZERO-SHOT TAB ── */}
-      {tab === 'zs' && (
-        <div>
-          <div className="dark-card" style={{ marginBottom: 20 }}>
-            <label className="form-label" style={{ marginBottom: 8, display: 'block' }}>Custom Candidate Phrases (one per line)</label>
-            <textarea value={customSentences} onChange={e => setCustomSentences(e.target.value)} rows={4}
-              placeholder="e.g. La niña come manzana&#10;El perro corre rápido"
-              style={{ width: '100%', background: '#121212', border: '1px solid #222', borderRadius: 6, padding: '12px', color: '#FFFFFF', fontFamily: 'var(--font-mono)', fontSize: 12, resize: 'vertical', outline: 'none' }} />
-          </div>
 
-          {apiOnline && (
-            <button className="btn-pill" onClick={runZeroShot} disabled={zsRunner.running} style={{ marginBottom: 32 }}>
-              <span className="btn-pill-icon">→</span>
-              {zsRunner.running ? 'Decoding…' : 'Decode EEG to Semantic Space'}
-            </button>
-          )}
-
-          {zsRunner.running && <ProgressBar progress={zsRunner.progress} msg={zsRunner.phaseMsg} />}
-
-          {zsResult && !zsRunner.running && (
-            <div className="grid-2col" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
-              <div className="dark-card">
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dark-secondary)', textTransform: 'uppercase', marginBottom: 16 }}>Top Semantic Matches</div>
-                {zsResult.top_std_preds?.map((p, i) => (
-                  <div key={p.class} style={{ marginBottom: 14 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, alignItems: 'center' }}>
-                      <div>
-                        <span style={{ fontSize: 13, color: 'var(--text-dark-primary)' }}>#{p.rank} {p.sentence}</span><br />
-                        <span style={{ fontSize: 11, color: 'var(--text-dark-secondary)' }}>{p.translation}</span>
-                      </div>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--accent)', whiteSpace: 'nowrap', marginLeft: 12 }}>
-                        {(p.similarity * 100).toFixed(1)}%
-                      </span>
-                    </div>
-                    <div className="probability-bar-track">
-                      <div className="probability-bar-fill" style={{ width: `${Math.max(0, p.similarity) * 100}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {zsResult.custom_results?.length > 0 && (
-                <div className="dark-card">
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dark-secondary)', textTransform: 'uppercase', marginBottom: 16 }}>Custom Candidates</div>
-                  {zsResult.custom_results.map(r => (
-                    <div key={r.sentence} style={{ marginBottom: 12 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, alignItems: 'center' }}>
-                        <span style={{ fontSize: 13, color: 'var(--text-dark-primary)' }}>{r.sentence}</span>
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--accent)', whiteSpace: 'nowrap', marginLeft: 12 }}>
-                          {(r.similarity * 100).toFixed(1)}%
-                        </span>
-                      </div>
-                      <div className="probability-bar-track">
-                        <div className="probability-bar-fill" style={{ width: `${Math.max(0, r.similarity) * 100}%` }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
