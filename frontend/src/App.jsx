@@ -104,9 +104,10 @@ function HeroNeurons() {
       </svg>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--text-dark-secondary)', fontFamily: 'var(--font-mono)' }}>
-        <span>CONVERGENCE RATE: 99.4%</span>
-        <span>LATENCY: 1.2ms</span>
-        <span>SYNAPSE: ds004279</span>
+        <span>Sampling Rate: 250 Hz</span>
+        <span>Input Channels: 14</span>
+        <span>Model Parameters: 3,661</span>
+        <span>Dataset: ds004279</span>
       </div>
     </div>
   );
@@ -281,7 +282,7 @@ export default function App() {
             </div>
             <div className="light-card">
               <span className="stat-number">56</span>
-              <span className="stat-desc">Participants from the ds004279 dataset, tested under auditory perception and imagined speech conditions.</span>
+              <span className="stat-desc">Participants from the ds004279 dataset (Valle et al., 2024) tested under auditory perception and imagined speech conditions.</span>
             </div>
             <div className="light-card">
               <span className="stat-number">14</span>
@@ -339,6 +340,9 @@ export default function App() {
                   <option key={idx} value={idx}>[{idx}] {sentence}</option>
                 ))}
               </select>
+              <div style={{ fontSize: 10, color: 'var(--text-dark-secondary)', marginTop: 4 }}>
+                The dropdown lists all 30 sentences from the ds004279 dataset. Classification results are computed for 2-class binary comparisons — select two sentences to compare their neural signatures.
+              </div>
             </div>
 
             <div className="form-group">
